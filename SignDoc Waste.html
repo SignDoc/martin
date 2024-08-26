@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignDoc Waste</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .button-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .logout-button {
+            font-size: 20px;
+            color: red;
+            background-color: white;
+            border: 2px solid gray;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+        .logout-button:hover {
+            background-color: lightgray;
+            color: darkred;
+        }
+        .back-button {
+            font-size: 20px;
+            color: blue;
+            background-color: white;
+            border: 2px solid gray;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .back-button:hover {
+            background-color: lightgray;
+            color: darkblue;
+        }
+        .search-box {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .edit-btn, .save-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .save-btn {
+            display: none;
+            margin-top: 10px;
+            float: right;
+        }
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.4); 
+            padding-top: 60px; 
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; 
+            max-width: 300px;
+            text-align: center;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .close-btn, .edit-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+        
+        .search-box input[type="text"] {
+            width: 50%;
+            padding: 12px;
+            font-size: 18px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+		.loading {
+    color: grey;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 20px;
+    animation: blink 1s linear infinite;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+#data-container {
+    display: none; /* Hide data container initially */
+}
+
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <button type="button" onclick="window.location.href='http://192.168.0.102:8082/Home1.html'" class="logout-button">Log Out</button>
+        <button type="button" onclick="openPasswordModal()" class="back-button">Edit</button>
+    </div>
+
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <h3>Enter Password to Edit</h3>
+            <input type="password" id="passwordInput" class="password-input" placeholder="Password">
+            <button onclick="checkPassword()" class="edit-btn">Submit</button>
+            <button onclick="closeModal()" class="close-btn">Close</button>
+            <p id="error-message" style="color: red; display: none;">Incorrect Password</p>
+        </div>
+    </div>
+<div id="loading-message" class="loading">Loading Data...</div>
+<div id="data-container"></div>
+    <h1 id="title" style="font-size: 54px; text-align: left;">
+        <span style="color: lightblue;">SignDoc</span> 
+        <span style="color: darkgray;">Waste</span> 
+    </h1>
+    
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Number of material Search..." onkeyup="searchTable()" />
+    </div>
+
+    <button class="save-btn" id="saveBtn" onclick="saveData()">Save Data</button>
+    <table id="dataTable">
+        <thead>
+            <!-- Column headers will be inserted here dynamically -->
+        </thead>
+        <tbody>
+            <!-- Data rows will be inserted here dynamically -->
+        </tbody>
+    </table>
+    <div id="pagination-controls" style="text-align: center; margin-top: 20px;"></div>
+
+    <script>
+        let currentPage = 1;
+        const resultsPerPage = 30;
+        let filteredData = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/waste-data')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Received Data:', data);
+                    if (Array.isArray(data) && data.length > 0) {
+                        filteredData = data;
+                        paginateTable(filteredData);
+                    } else {
+                        document.getElementById('dataTable').innerHTML = '<tr><td colspan="3">No data available or data format is incorrect</td></tr>';
+                    }
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+
+        function paginateTable(data) {
+            const totalPages = Math.ceil(data.length / resultsPerPage);
+            displayPage(data, currentPage, totalPages);
+            createPaginationControls(totalPages);
+        }
+
+        function displayPage(data, page, totalPages) {
+            const tableHead = document.querySelector('#dataTable thead');
+            const tableBody = document.querySelector('#dataTable tbody');
+
+            // Clear the table
+            tableHead.innerHTML = '';
+            tableBody.innerHTML = '';
+
+            // Set table headers
+            const headers = ['artnr', 'prc']; // Adjust according to your keys
+            const headerRow = document.createElement('tr');
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+            tableHead.appendChild(headerRow);
+
+            // Set table data for the current page
+            const startIndex = (page - 1) * resultsPerPage;
+            const endIndex = Math.min(startIndex + resultsPerPage, data.length);
+
+            for (let i = startIndex; i < endIndex; i++) {
+                const tr = document.createElement('tr');
+                headers.forEach(header => {
+                    const td = document.createElement('td');
+                    td.textContent = data[i][header] || '';  // Display an empty string if the value is undefined
+                    tr.appendChild(td);
+                });
+                tableBody.appendChild(tr);
+            }
+        }
+
+        function createPaginationControls(totalPages) {
+            const paginationContainer = document.getElementById('pagination-controls');
+            paginationContainer.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement('button');
+                button.textContent = i;
+                button.onclick = () => {
+                    currentPage = i;
+                    displayPage(filteredData, currentPage, totalPages);
+                };
+                paginationContainer.appendChild(button);
+            }
+        }
+
+        function enableEditing() {
+            const rows = document.querySelectorAll('#dataTable tbody tr');
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                cells.forEach(cell => {
+                    cell.contentEditable = true; // Enable editing
+                    cell.classList.add('editable'); // Add a class to track editable cells
+                });
+            });
+
+            // Show the save button after enabling editing
+            document.getElementById('saveBtn').style.display = 'inline-block';
+        }
+
+        function saveData() {
+            const tableRows = document.querySelectorAll('#dataTable tbody tr');
+            const data = [];
+
+            tableRows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const rowData = {};
+
+                rowData['artnr'] = cells[0].textContent;
+                rowData['prc'] = cells[1].textContent;
+
+                data.push(rowData);
+            });
+
+            // Send data to the server
+            fetch('/save-waste-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(response => {
+                if (response.ok) {
+                    alert('Data saved successfully!');
+                    disableEditing(); // Disable editing after saving
+                } else {
+                    alert('Error saving data');
+                }
+            }).catch(error => console.error('Error saving data:', error));
+        }
+
+        function disableEditing() {
+            const rows = document.querySelectorAll('#dataTable tbody tr');
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                cells.forEach(cell => {
+                    cell.contentEditable = false; // Disable editing
+                    cell.classList.remove('editable'); // Remove the editable class
+                });
+            });
+
+            // Hide the save button after disabling editing
+            document.getElementById('saveBtn').style.display = 'none';
+        }
+
+        function searchTable() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const filteredResults = filteredData.filter(row => {
+                return Object.values(row).some(value => value.toString().toLowerCase().includes(input));
+            });
+            paginateTable(filteredResults);
+        }
+
+        function openPasswordModal() {
+            document.getElementById('passwordModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('passwordModal').style.display = 'none';
+            document.getElementById('error-message').style.display = 'none'; // Hide error message
+            document.getElementById('passwordInput').value = ''; // Clear the input
+        }
+
+        function checkPassword() {
+            const allowedPasswords = ['admin01', 'Andon0512!', '02002'];
+            const enteredPassword = document.getElementById('passwordInput').value;
+
+            if (allowedPasswords.includes(enteredPassword)) {
+                closeModal();
+                enableEditing(); // Call the function to enable editing
+            } else {
+                document.getElementById('error-message').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

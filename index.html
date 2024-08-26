@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In</title>
+    <style>
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+        .title-lightblue {
+            color: lightblue;
+        }
+        .title-darkgray {
+            color: darkgray;
+        }
+        .back-button {
+            background-color: white;
+            border: 2px solid lightblue;
+            color: lightblue;
+            padding: 10px 20px;
+            font-size: 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .back-button:hover {
+            background-color: lightblue;
+            color: white;
+        }
+        .password-input {
+            font-size: 20px;
+            padding: 10px;
+            width: 300px;
+        }
+        .valid-check {
+            color: green;
+            font-size: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <p id="partnerText" style="font-size: 15px; color: lightgray; text-align: left;"><b>Your trusted partner for e-documents and e-signatures.</b></p>
+
+    <h1 id="title" style="font-size: 54px; text-align: left;">
+        <span class="title-lightblue">SignDoc</span> 
+        <span class="title-darkgray">App</span> 
+        <span style="font-size: 12px;">™</span>
+    </h1>
+
+    <h2 style="margin-left: 3em; animation: blinking 1s infinite;">Insert password</h2>
+
+    <style>
+        @keyframes blinking {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+
+    <form id="loginForm">
+        <label for="password"></label>
+        <input type="password" id="password" name="password" class="password-input" required>
+        <span id="validCheck" class="valid-check">✔</span>
+        <span id="message"></span>
+        <br><br>
+        <button style="margin-left: 7em;" type="submit" class="back-button">Enter</button>
+    </form>
+    <br><br><br><br>
+    <br><br>
+    <p style="font-size: 12px; text-align: left">
+        <b id="info" style="color: lightblue;">info:</b> <i>+389 78 395 246;</i>
+        <b id="mail" style="color: lightblue;"> mail:</b>signdoc.share@gmail.com <b id="mail" style="color: lightblue;">      © </b>2024
+    </p>
+    <script>
+        const validPasswords = ["Andon0512!","02001", "02002", "03001", "04001", "05001", "06001", "07001", "08001", "09001", "01111", "111111", "12345", "admin01"];
+        const form = document.getElementById('loginForm');
+        const passwordInput = document.getElementById('password');
+        const messageSpan = document.getElementById('message');
+        const validCheck = document.getElementById('validCheck');
+
+        passwordInput.addEventListener('input', function() {
+            const password = passwordInput.value;
+            if (validPasswords.includes(password)) {
+                validCheck.style.display = 'inline';
+            } else {
+                validCheck.style.display = 'none';
+            }
+        });
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const password = passwordInput.value;
+
+            if (validPasswords.includes(password)) {
+                messageSpan.textContent = 'Correct';
+                messageSpan.className = 'success';
+                if (window.location.hostname === '192.168.0.102') {
+                    window.location.href = 'http://192.168.0.102:8082/Home1.html';
+                } else {
+                    window.location.href = 'file:///C:/Users/mnikolov/Desktop/HTML/Home1.html';
+                }
+            } else {
+                messageSpan.textContent = 'Wrong';
+                messageSpan.className = 'error';
+            }
+        });
+    </script>
+</body>
+</html>

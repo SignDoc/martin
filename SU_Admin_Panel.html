@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SignDoc Super Admin</title>
+<style>
+/* CSS за изглед на копчиња, табели, и форми */
+.button-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 50px;
+}
+.updating-message {
+    font-size: 20px;
+    color: red;
+    text-align: center;
+    margin-top: 20px;
+    display: none;
+}
+
+.logout-button {
+    background-color: white;
+    border: 2px solid gray;
+    color: red;
+    padding: 10px 20px;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+    margin-right: 100px;
+}
+.logout-button:hover {
+    background-color: lightgray;
+    color: darkred;
+}
+.upload-button {
+    background-color: lightblue;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+.upload-button:hover {
+    background-color: darkblue;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+table, th, td {
+    border: 1px solid black;
+}
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+th {
+    background-color: lightblue;
+}
+#loadingMessage {
+    font-size: 20px;
+    color: gray;
+    text-align: center;
+    margin-top: 20px;
+}
+.pagination button {
+    background-color: lightgray;
+    border: 2px solid lightblue;
+    color: black;
+    padding: 10px 20px;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 0 5px;
+}
+.pagination button:hover {
+    background-color: darkgray;
+}
+.pagination button:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+}
+.search-input {
+    width: 200px;
+    padding: 5px;
+    margin-bottom: 20px;
+    margin-right: 10px;
+}
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+#updatingMessage {
+    font-size: 20px;
+    color: red;
+    text-align: center;
+    margin-top: 20px;
+    animation: blink 1s infinite;
+    display: none; /* Скриена по дифолт */
+}
+
+/* Стилизација на модален прозорец за внесување лозинка */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    padding-top: 60px;
+}
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 300px;
+    text-align: center;
+}
+.password-input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    box-sizing: border-box;
+}
+.modal button {
+    background-color: lightgray;
+    border: 2px solid lightblue;
+    color: black;
+    padding: 10px 20px;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 5px;
+}
+.modal button:hover {
+    background-color: darkgray;
+}
+.logout-button {
+    background-color: white;
+    border: 2px solid gray;
+    color: red;
+    padding: 10px 20px;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+    margin-right: 100px;
+}
+
+.logout-button:hover {
+    background-color: lightgray;
+    color: darkred;
+}
+
+</style>
+</head>
+<body>
+
+    <div class="button-container">
+        <input type="file" id="fileInput" style="display: none;" onchange="handleFileUpload(event)" />
+        <div id="updatingMessage">Updating Data...</div>
+        <button type="button" class="upload-button" onclick="showPasswordModal()">Upload Excel</button>
+        <button type="button" class="save-button" onclick="saveData()">Save Data</button>
+        <button type="button" class="download-button" onclick="downloadData()">Download</button>
+
+      
+        <label for="searchInput">Search:</label>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search..." title="Search" aria-label="Search" oninput="filterData()">
+
+        <button id="prevPage" onclick="prevPage()" disabled>Previous</button>
+        <span id="pageInfo"></span>
+        <button id="nextPage" onclick="nextPage()">Next</button>
+        <input type="number" id="pageInput" placeholder="Page" min="1" style="width: 60px;" onchange="goToPage()">
+		<div class="button-container">
+    <!-- Сите ваши постоечки копчиња тука -->
+    <button type="button" class="logout-button" onclick="logOut()">Log Out</button>
+</div>
+<BR>
+    <div style="margin-left: auto;">
+    <div>
+        <label for="filterKW">GBL = KW</label>
+        <input type="checkbox" id="filterKW" onclick="toggleKWInput()" />
+        <input type="number" id="kwInput" placeholder="KW" min="1" max="53" disabled onchange="filterByKW()" />
+    </div>
+
+    <div>
+        <label for="filterISPRATNICA">ISPRATNICA</label>
+        <input type="checkbox" id="filterISPRATNICA" onclick="filterByDocumentType()" />
+    </div>
+
+    <div>
+        <label for="filterPRIEMNICA">PRIEMNICA</label>
+        <input type="checkbox" id="filterPRIEMNICA" onclick="filterByDocumentType()" />
+    </div>
+</div>
+
+
+  
+</div>
+
+    <div id="loadingMessage">Loading data...</div>
+    <div id="dataDisplay" style="margin-top: 20px;"></div>
+    <div class="sheet-list" id="sheetList"></div>
+    <div id="dataDisplay" style="margin-top: 20px;"></div>
+
+    <div class="pagination"></div>
+
+    <!-- Модален прозорец за внесување на лозинка -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <h2>Enter Password</h2>
+            <input type="password" id="passwordInput" class="password-input" placeholder="Enter your password" />
+            <span id="passwordError" style="color: red;"></span>
+            <br><br>
+            <button onclick="checkPassword()">Submit</button>
+            <button onclick="closePasswordModal()">Cancel</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script>
+    let allData = [];
+    let filteredData = [];
+    let currentPage = 1;
+    const recordsPerPage = 40;
+
+    function fetchData() {
+    fetch('/data')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Received data:', data);
+
+            if (data && Array.isArray(data)) {
+                // Претпоставувам дека секој ред е листа, која содржи вредности за колони
+                filteredData = data.filter(row => Array.isArray(row) && row.length > 0 && row.some(cell => cell !== null && cell !== '' && cell !== undefined));
+                allData = filteredData;
+                displayData(filteredData);
+                document.getElementById('loadingMessage').style.display = 'none';
+            } else {
+                console.error('No valid data found.');
+                document.getElementById('loadingMessage').textContent = 'No valid data available';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            document.getElementById('loadingMessage').textContent = 'Error loading data';
+        });
+}
+
+function logOut() {
+    window.location.href = "http://192.168.0.102:8082/Home1.html";
+}
+
+
+
+
+
+
+    function displayData(data) {
+    console.log('Displaying data:', data);
+
+    // Проверка дали има податоци за прикажување
+    if (!Array.isArray(data) || data.length === 0) {
+        document.getElementById('dataDisplay').innerHTML = '<p>No data available</p>';
+        updatePagination(0);
+        return;
+    }
+
+    // Определување на сегашната страна за приказ
+    const start = (currentPage - 1) * recordsPerPage;
+    const end = start + recordsPerPage;
+
+    // Сечење на податоците за приказ на сегашната страна
+    const paginatedData = data.slice(start, end);
+    let displayDiv = document.getElementById('dataDisplay');
+    let table = '<table><tr>';
+
+    // Додавање на заглавија (headers)
+    data[0].forEach((header, index) => {
+        table += `<th>${header || `Column ${index + 1}`}</th>`;
+    });
+
+    table += '</tr>';
+
+    // Додавање на податоци во табелата
+    paginatedData.forEach((row) => {
+        if (Array.isArray(row)) {
+            table += '<tr>';
+            row.forEach(cell => {
+                table += `<td>${cell || ''}</td>`;
+            });
+            table += '</tr>';
+        } else {
+            console.error('Row is not an array:', row);
+        }
+    });
+
+    table += '</table>';
+    displayDiv.innerHTML = table;
+    updatePagination(data.length);
+}
+
+
+    function downloadData() {
+    const ulValue = document.getElementById('ulInput').value;
+    const sValue = document.getElementById('sInput').value;
+
+    let headers = ['Sheet Name'];
+    if (ulValue) headers.push(`UL: ${ulValue}`);
+    if (sValue) headers.push(`S: ${sValue}`);
+    headers = [...headers, ...filteredData[0]];
+
+    const dataWithHeaders = [headers, ...filteredData.slice(1)];
+    const worksheet = XLSX.utils.aoa_to_sheet(dataWithHeaders);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+
+    const now = new Date();
+    const timestamp = now.toISOString().slice(0, 19).replace(/-/g, "").replace(/:/g, "").replace("T", "_");
+
+    XLSX.writeFile(workbook, `Data_Warehouse_${timestamp}.xlsx`);
+}
+function saveData() {
+    const dataToSave = allData; // Податоци што сакате да ги зачувате
+
+    // Означете дека податоците се ажурираат
+    document.getElementById('updatingMessage').style.display = 'block';
+
+    fetch('/save', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataToSave)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.text();
+    })
+    .then(data => {
+        alert('Data saved successfully');
+        document.getElementById('updatingMessage').style.display = 'none';
+    })
+    .catch(error => {
+        console.error('Error saving data:', error);
+        alert('Error saving data: ' + error.message);
+        document.getElementById('updatingMessage').style.display = 'none';
+    });
+}
+
+
+
+
+    function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        document.getElementById('updatingMessage').style.display = 'block';
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheetNames = workbook.SheetNames;
+
+            let combinedData = [];
+            const now = new Date();
+            const formattedDateTime = now.toLocaleString('mk-MK', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }); // Форматиран датум и време
+            const weekNumber = getISOWeekNumber(now);  // Добивање на бројот на календарската недела
+
+            sheetNames.forEach(sheetName => {
+                let sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
+                sheetData = sheetData.filter(row => row.some(cell => cell !== null && cell !== '' && cell !== undefined));
+
+                // Пронаоѓање на индексот на колоната „Фарбе“
+                const headerRow = sheetData[0];
+                const farbeColumnIndex = headerRow.findIndex(header => typeof header === 'string' && header.toLowerCase() === 'farbe');
+
+                // Додавање на датум/време и KW во секој ред
+                sheetData = sheetData.map(row => {
+                    const newRow = [...row];
+                    // Додавање на датум/време
+                    newRow.push(formattedDateTime);
+                    // Додавање на "KW" и бројот на неделата
+                    newRow.push(`KW${weekNumber}`);
+                    return newRow;
+                });
+
+                // Групирање на редовите според PA и сумирање, освен за колоната „Фарбе“
+                let paGroups = {};
+
+                sheetData.forEach((row, rowIndex) => {
+                    if (rowIndex === 0) {
+                        return; // Skip header
+                    }
+
+                    row.forEach((cell, cellIndex) => {
+                        if (typeof cell === 'string' && cell.includes('PA')) {
+                            const paKeyMatch = cell.match(/PA\d+/);
+                            if (paKeyMatch) {
+                                const paKey = paKeyMatch[0];
+
+                                if (!paGroups[paKey]) {
+                                    paGroups[paKey] = Array(row.length).fill(null);
+                                    paGroups[paKey][cellIndex] = paKey;
+                                }
+
+                                row.forEach((cellValue, i) => {
+                                    if (i !== farbeColumnIndex && typeof cellValue === 'number') {
+                                        if (paGroups[paKey][i] === null) {
+                                            paGroups[paKey][i] = 0;
+                                        }
+                                        paGroups[paKey][i] += cellValue;
+                                    } else if (i !== farbeColumnIndex && paGroups[paKey][i] === null) {
+                                        paGroups[paKey][i] = cellValue;
+                                    } else if (i === farbeColumnIndex && paGroups[paKey][i] === null) {
+                                        paGroups[paKey][i] = cellValue; // Keep Farbe values as is
+                                    }
+                                });
+                            }
+                        }
+                    });
+                });
+
+                const groupedData = Object.values(paGroups);
+                combinedData.push(headerRow); // Add header row
+                combinedData.push(...groupedData);
+            });
+
+            const headers = ['Sheet Name', ...combinedData[0], 'Date/Time', 'KW'];
+            combinedData = [headers, ...combinedData.slice(1)];
+
+            allData = combinedData;
+            filteredData = allData;
+            displayData(filteredData);
+
+            document.getElementById('updatingMessage').style.display = 'none';
+        };
+        reader.readAsArrayBuffer(file);
+    }
+}
+
+function getISOWeekNumber(date) {
+    const startOfYear = new Date(date.getFullYear(), 0, 1);
+    const pastDaysOfYear = (date - startOfYear) / 86400000;
+
+    return Math.ceil((pastDaysOfYear + startOfYear.getDay() + 1) / 7);
+}
+
+
+function getISOWeekNumber(date) {
+    const startOfYear = new Date(date.getFullYear(), 0, 1);
+    const pastDaysOfYear = (date - startOfYear) / 86400000;
+
+    return Math.ceil((pastDaysOfYear + startOfYear.getDay() + 1) / 7);
+}
+
+
+    function updatePagination(totalRecords) {
+        const totalPages = Math.ceil(totalRecords / recordsPerPage);
+        document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+        document.getElementById('prevPage').disabled = currentPage === 1;
+        document.getElementById('nextPage').disabled = currentPage === totalPages;
+    }
+
+    function filterData() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+    // Прво, примени го филтерот на тековно филтрираните податоци
+    let searchResults = filteredData.filter(row =>
+        row.some(cell => 
+            cell && cell.toString().toLowerCase().includes(searchTerm)
+        )
+    );
+
+    // Сега прикажи ги резултатите
+    currentPage = 1;
+    displayData(searchResults);
+}
+
+function filterByDocumentType() {
+    const isIspratnicaSelected = document.getElementById('filterISPRATNICA').checked;
+    const isPriemnicaSelected = document.getElementById('filterPRIEMNICA').checked;
+
+    if (isIspratnicaSelected && isPriemnicaSelected) {
+        filteredData = allData.filter(row =>
+            row.some(cell => 
+                typeof cell === 'string' && (cell.includes('ISPRATNICA') || cell.includes('PRIEMNICA'))
+            )
+        );
+    } else if (isIspratnicaSelected) {
+        filteredData = allData.filter(row =>
+            row.some(cell => 
+                typeof cell === 'string' && cell.includes('ISPRATNICA')
+            )
+        );
+    } else if (isPriemnicaSelected) {
+        filteredData = allData.filter(row =>
+            row.some(cell => 
+                typeof cell === 'string' && cell.includes('PRIEMNICA')
+            )
+        );
+    } else {
+        filteredData = allData; // Покажи ги сите податоци ако не е избран ниту еден од чекбоксовите
+    }
+
+    filterData();  // Повикај го filterData за да се применат и филтерот и пребарувањето на истите резултати
+}
+
+	
+	// Функција за овозможување/оневозможување на UL поле
+function toggleULInput() {
+    const ulCheckbox = document.getElementById('filterUL');
+    const ulInput = document.getElementById('ulInput');
+    ulInput.disabled = !ulCheckbox.checked;
+}
+
+// Функција за овозможување/оневозможување на S поле
+function toggleSInput() {
+    const sCheckbox = document.getElementById('filterS');
+    const sInput = document.getElementById('sInput');
+    sInput.disabled = !sCheckbox.checked;
+}
+
+
+    function filterByPA() {
+    const isPASelected = document.getElementById('filterPA').checked;
+
+    if (isPASelected) {
+        let paGroups = {};
+
+        allData.forEach(row => {
+            row.forEach((cell, index) => {
+                if (typeof cell === 'string' && cell.includes('PA')) {
+                    const paKeyMatch = cell.match(/PA\d+/);  // Најди го делот од текстот кој го содржи „PA“ и број
+                    if (paKeyMatch) {
+                        const paKey = paKeyMatch[0];  // Групирање според „PA“ + бројот
+
+                        if (!paGroups[paKey]) {
+                            paGroups[paKey] = Array(row.length).fill(null);
+                            paGroups[paKey][index] = paKey;  // Ставете го клучот во истата колона каде што е пронајден
+                        }
+
+                        row.forEach((cellValue, i) => {
+                            if (typeof cellValue === 'number') {
+                                if (paGroups[paKey][i] === null) {
+                                    paGroups[paKey][i] = 0;  // Иницијализирајте го како 0 ако е прв пат
+                                }
+                                paGroups[paKey][i] += cellValue;
+                            } else if (paGroups[paKey][i] === null) {
+                                paGroups[paKey][i] = cellValue;
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
+        // Претвори го paGroups во формат за прикажување
+        filteredData = Object.values(paGroups);
+    } else {
+        filteredData = allData;
+    }
+
+    currentPage = 1;
+    displayData(filteredData);
+}
+
+
+
+    function toggleKWInput() {
+        const kwCheckbox = document.getElementById('filterKW');
+        const kwInput = document.getElementById('kwInput');
+        kwInput.disabled = !kwCheckbox.checked;
+
+        if (!kwCheckbox.checked) {
+            kwInput.value = '';
+            filteredData = allData;
+            displayData(filteredData);
+        }
+    }
+	function downloadData() {
+    const ulValue = document.getElementById('ulInput').value;
+    const sValue = document.getElementById('sInput').value;
+
+    // Создавање на првиот ред со UL и S вредности
+    let headerRow = [];
+    if (ulValue) headerRow.push(`UL: ${ulValue}`);
+    if (sValue) headerRow.push(`S: ${sValue}`);
+
+    // Пополнување на остатокот од редот за да биде иста должина како податоците
+    while (headerRow.length < filteredData[0].length) {
+        headerRow.push('');
+    }
+
+    // Додавање на заглавијата и останатите редови
+    const dataWithHeaders = [headerRow, ...filteredData];
+    const worksheet = XLSX.utils.aoa_to_sheet(dataWithHeaders);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+
+    const now = new Date();
+    const timestamp = now.toISOString().slice(0, 19).replace(/-/g, "").replace(/:/g, "").replace("T", "_");
+
+    XLSX.writeFile(workbook, `Data_Warehouse_${timestamp}.xlsx`);
+}
+
+function downloadData() {
+    const ulValue = document.getElementById('ulInput').value;
+    const sValue = document.getElementById('sInput').value;
+
+    // Создавање на првиот ред со UL и S вредности
+    let headerRow = [];
+    if (ulValue) headerRow.push(`UL: ${ulValue}`);
+    if (sValue) headerRow.push(`S: ${sValue}`);
+
+    // Пополнување на остатокот од редот за да биде иста должина како податоците
+    while (headerRow.length < filteredData[0].length) {
+        headerRow.push('');
+    }
+
+    // Додавање на заглавијата и останатите редови
+    const dataWithHeaders = [headerRow, ...filteredData];
+    const worksheet = XLSX.utils.aoa_to_sheet(dataWithHeaders);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+
+    const now = new Date();
+    const timestamp = now.toISOString().slice(0, 19).replace(/-/g, "").replace(/:/g, "").replace("T", "_");
+
+    XLSX.writeFile(workbook, `Data_Warehouse_${timestamp}.xlsx`);
+}
+
+
+
+    function filterByKW() {
+        const kwValue = document.getElementById('kwInput').value;
+
+        if (kwValue) {
+            filteredData = allData.filter(row =>
+                row.some(cell => 
+                    typeof cell === 'string' && cell.includes(`KW${kwValue}`)
+                )
+            );
+        } else {
+            filteredData = allData;
+        }
+
+        currentPage = 1;
+        displayData(filteredData);
+    }
+
+    function nextPage() {
+        const totalPages = Math.ceil(filteredData.length / recordsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            displayData(filteredData);
+        }
+    }
+
+    
+    // Модални функции за проверка на лозинка
+    function showPasswordModal() {
+        document.getElementById('passwordModal').style.display = 'block';
+    }
+
+    function closePasswordModal() {
+        document.getElementById('passwordModal').style.display = 'none';
+        document.getElementById('passwordInput').value = '';
+        document.getElementById('passwordError').textContent = '';
+    }
+
+    function checkPassword() {
+        const password = document.getElementById('passwordInput').value;
+        if (password === 'Andon0512!') {
+            closePasswordModal();
+            document.getElementById('fileInput').click();
+        } else {
+            document.getElementById('passwordError').textContent = 'Incorrect password';
+        }
+    }
+
+    window.onload = function() {
+        fetchData();
+    };
+function filterByDocumentType() {
+    const isIspratnicaSelected = document.getElementById('filterISPRATNICA').checked;
+    const isPriemnicaSelected = document.getElementById('filterPRIEMNICA').checked;
+
+    if (isIspratnicaSelected && isPriemnicaSelected) {
+        filteredData = allData.filter(row =>
+            row.some(cell => 
+                typeof cell === 'string' && (cell.includes('ISPRATNICA') || cell.includes('PRIEMNICA'))
+            )
+        );
+    } else if (isIspratnicaSelected) {
+        filteredData = allData.filter(row =>
+            row.some(cell => 
+                typeof cell === 'string' && cell.includes('ISPRATNICA')
+            )
+        );
+    } else if (isPriemnicaSelected) {
+        filteredData = allData.filter(row =>
+            row.some(cell => 
+                typeof cell === 'string' && cell.includes('PRIEMNICA')
+            )
+        );
+    } else {
+        filteredData = allData; // Покажи ги сите податоци ако не е избран ниту еден од чекбоксовите
+    }
+
+    currentPage = 1;
+    displayData(filteredData);
+}
+
+
+    </script>
+
+</body>
+</html>

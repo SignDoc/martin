@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignDoc Catalog</title>
+    <style>
+        .back-button {
+            background-color: white;
+            border: 2px solid lightblue;
+            color: lightblue;
+            padding: 10px 20px;
+            font-size: 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+            width: 150px;
+            height: 50px;
+            margin: 10px 0;
+        }
+        .disabled-button {
+            background-color: gray;
+            border: 2px solid gray;
+            color: white;
+            cursor: not-allowed;
+        }
+        .back-button:hover {
+            background-color: lightblue;
+            color: white;
+        }
+        .logout-button {
+            background-color: white;
+            border: 2px solid gray;
+            color: red;
+            padding: 10px 20px;
+            font-size: 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+            position: left ;
+            top: 10px;
+            right: 10px;
+        }
+        .logout-button:hover {
+            background-color: lightgray;
+            color: darkred;
+        }
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgb(0,0,0); 
+            background-color: rgba(0,0,0,0.4); 
+            padding-top: 60px; 
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; 
+            max-width: 300px;
+            animation: blinking 1s infinite;
+        }
+        .blinking-border {
+            animation: blinking 1s infinite;
+        }
+        @keyframes blinking {
+            0% { border-color: red; }
+            50% { border-color: transparent; }
+            100% { border-color: red; }
+        }
+        .valid-border {
+            border-color: green !important;
+        }
+        .password-input {
+            margin-left: -10px;
+        }
+        body {
+            font-size: 20px;
+            line-height: 1.6;
+        }
+        .back-button, .logout-button {
+            padding: 15px 30px;
+            font-size: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            width: 200px;
+            height: 60px;
+        }
+    </style>
+</head>
+<body>
+    <button type="button" onclick="goToHome()" class="logout-button">Log Out</button>
+    <br><br>
+    <p id="partnerText" style="font-size: 15px; color: lightgray; text-align: left;"><b>Your trusted partner for e-documents and e-signatures.</b></p>
+
+    <h1 id="title" style="font-size: 54px; text-align: left;">
+        <span style="color: lightblue;">SignDoc</span> 
+        <span style="color: darkgray;">Catalog</span> 
+        
+    </h1>
+
+    <div style="text-align: left; margin-top: 20px;">
+	<b style="margin-left: 10px;">Application for tracking materials</b><br>
+        <button onclick="showPasswordPrompt('share')" class="back-button">SignDoc Share</button><b style="margin-left: 10px;"><br><br>
+		<b style="margin-left: 10px;">Panel for Warehouse/SignDoc Super Admin<BR><I>(main base)</i></b><br>
+        <button onclick="showPasswordPrompt('admin')" class="back-button">W/SSA</button><br><br>
+		<b style="margin-left: 10px;">Warehouse menu</b><br>
+        <button onclick="showPasswordPrompt('warehouseMenu')" class="back-button">Warehouse</button><br><BR>
+		</b><b style="margin-left: 10px;">Information for % of Waste</b><br>
+        <!-- Remove 'disabled-button' class and 'disabled' attribute -->
+        <button onclick="goToWaste()" class="back-button">Waste</button><BR><BR>
+		<b style="margin-left: 10px;">Convert from .csv</b><br>
+        <button onclick="goToConverter()" class="back-button">Converter</button><BR><BR>
+		
+    </div>
+
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <input type="password" id="passwordInput" placeholder="Your password" class="blinking-border password-input" style="font-size: 20px; padding: 10px; width: 100%;">
+            <p id="passwordMessage" style="text-align: center; font-size: 16px;"></p>
+            <button id="enterButton" onclick="redirectToPage()" class="back-button" disabled style="width: 100%; margin-top: 10px;">Enter</button>
+            <button id="cancelButton" onclick="cancelForm()" class="back-button" style="width: 100%; margin-top: 10px;">Cancel</button>
+        </div>
+    </div>
+
+    <div id="dataDisplay" style="margin-top: 20px;"></div>
+    <br><br>
+    <p style="font-size: 12px; text-align: left">
+        <b id="info" style="color: lightblue;">info:</b> <i>+389 78 395 246;</i>
+        <b id="mail" style="color: lightblue;"> mail:</b>signdoc.share@gmail.com <b id="mail" style="color: lightblue;">      © </b>2024
+    </p>
+
+    <script>
+        let redirectPage = '';
+
+        function showPasswordPrompt(page) {
+            redirectPage = page;
+            document.getElementById('passwordModal').style.display = 'block';
+        }
+
+        function checkPassword() {
+            const validPasswords = ["Andon0512!","admin01","02001", "02002", "03001", "04001", "05001", "06001", "07001", "08001", "09001", "01111", "111111", "12345", "admin01"];
+            const warehousePasswords = ["Andon0512!", "admin01", "02002"];
+            const password = document.getElementById('passwordInput').value;
+            const passwordInput = document.getElementById('passwordInput');
+            const passwordMessage = document.getElementById('passwordMessage');
+
+            if (redirectPage === 'share' && validPasswords.includes(password)) {
+                document.getElementById('enterButton').disabled = false;
+                passwordInput.classList.remove('blinking-border');
+                passwordInput.classList.add('valid-border');
+                passwordMessage.textContent = 'Correct';
+                passwordMessage.style.color = 'green';
+            } else if (redirectPage === 'warehouse' && warehousePasswords.includes(password)) {
+                document.getElementById('enterButton').disabled = false;
+                passwordInput.classList.remove('blinking-border');
+                passwordInput.classList.add('valid-border');
+                passwordMessage.textContent = 'Correct';
+                passwordMessage.style.color = 'green';
+            } else if (redirectPage === 'admin' && (password === 'Andon0512!' || password === 'admin01')) {
+                document.getElementById('enterButton').disabled = false;
+                passwordInput.classList.remove('blinking-border');
+                passwordInput.classList.add('valid-border');
+                passwordMessage.textContent = 'Correct';
+                passwordMessage.style.color = 'green';
+            } else if (redirectPage === 'warehouseMenu' && warehousePasswords.includes(password)) {
+                document.getElementById('enterButton').disabled = false;
+                passwordInput.classList.remove('blinking-border');
+                passwordInput.classList.add('valid-border');
+                passwordMessage.textContent = 'Correct';
+                passwordMessage.style.color = 'green';
+            } else {
+                document.getElementById('enterButton').disabled = true;
+                passwordInput.classList.remove('valid-border');
+                passwordInput.classList.
+				add('blinking-border');
+                passwordMessage.textContent = 'Wrong';
+                passwordMessage.style.color = 'red';
+            }
+        }
+
+        function redirectToPage() {
+            if (redirectPage === 'share') {
+                location.href = 'http://192.168.0.102:8082/';
+            } else if (redirectPage === 'warehouse') {
+                location.href = 'http://192.168.0.102:8081/Warehouse.html';
+            } else if (redirectPage === 'admin') {
+                location.href = 'http://192.168.0.102:8082/SU_Admin_Panel.html';
+            } else if (redirectPage === 'warehouseMenu') {
+                location.href = 'http://192.168.0.102:8082/Warehouse-pa-kw.html';
+            }
+        }
+
+        function cancelForm() {
+            document.getElementById('passwordModal').style.display = 'none';
+        }
+
+        function goToHome() {
+            location.href = 'http://192.168.0.102:8081/';
+        }
+
+        function goToConverter() {
+            location.href = 'http://192.168.0.102:8082/SignDoc%20Converter.html';
+        }
+
+        // Add this function to handle the Waste button click
+        function goToWaste() {
+            location.href = 'http://192.168.0.102:8082/SignDoc%20Waste.html';
+        }
+
+        document.getElementById('passwordInput').addEventListener('input', checkPassword);
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('passwordModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload CSV</title>
+    <style>
+        .back-button, .button, .file-label {
+            background-color: white;
+            border: 2px solid lightblue;
+            color: lightblue;
+            padding: 10px 20px;
+            font-size: 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+            width: 150px; /* Fixed width */
+            height: 50px; /* Fixed height */
+            margin: 10px 0; /* Margin for spacing */
+        }
+
+        .back-button:hover, .button:hover, .file-label:hover {
+            background-color: lightblue;
+            color: white;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .browse-text {
+            font-weight: bold;
+            color: darkgray;
+        }
+    </style>
+</head>
+<body>
+    <button type="button" onclick="goBack()" class="back-button">Back</button><br><br><br><br><br>
+    <p id="partnerText" style="font-size: 15px; color: lightgray; text-align: left;"><b>Your trusted partner for e-documents and e-signatures.</b></p>
+
+    <h1 id="title" style="font-size: 54px;">
+        <span style="color: lightblue;">SignDoc</span> 
+        <span style="color: darkgray;">Share</span> 
+        <span style="font-size: 12px;">™</span>
+    </h1>
+
+    <h2>      Upload CSV File</h2><br><br>
+    <label for="csvFileInput" class="file-label">Choose File</label><span class="browse-text"> Browse from directory...</span>
+    <input type="file" id="csvFileInput" class="file-input" accept=".csv" /><br><br><br>
+    <button class="button" onclick="processCSV()">Upload and Process CSV</button><br><br><br><br><br><br><br><br>
+
+    <p style="font-size: 12px; text-align: left">
+        <b id="info" style="color: lightblue;">info:</b> <i>+389 78 395 246;</i>
+        <b id="mail" style="color: lightblue;"> mail:</b>signdoc.share@gmail.com <b id="mail" style="color: lightblue;">      © </b>2024
+    </p>
+
+    <script>
+        function processCSV() {
+            const input = document.getElementById('csvFileInput');
+            const file = input.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const csvData = event.target.result;
+                const rows = csvData.split('\n').map(row => row.split(','));
+
+                // Assuming the first row is the header
+                const headers = rows[0];
+                const validColumnIndex = headers.indexOf('valid_column_name');
+                const newColumnIndex = headers.length;
+
+                // Add new column header
+                headers.push('New_Column');
+
+                // Process each row
+                for (let i = 1; i < rows.length; i++) {
+                    const row = rows[i];
+                    const validColumnValue = row[validColumnIndex];
+
+                    // Here you would check the value in your database and update the row
+                    // For demonstration, let's assume we append a static value
+                    row.push('New Value');
+                }
+
+                // Convert back to CSV format
+                const updatedCSV = rows.map(row => row.join(',')).join('\n');
+                console.log(updatedCSV);
+
+                // Here you would send the updated CSV to your server to update the database
+                fetch('/upload-csv', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ csvData: updatedCSV })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            };
+
+            reader.readAsText(file);
+        }
+
+        function goBack() {
+            if (window.location.hostname === '192.168.0.102') {
+                window.location.href = 'http://192.168.0.102:8082/Home1.html';
+            } else {
+                window.location.href = 'file:///C:/Users/mnikolov/Desktop/HTML/Home1.html';
+            }
+        }
+    </script>
+</body>
+</html>
