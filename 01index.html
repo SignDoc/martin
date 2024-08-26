@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="mk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log In</title>
+    <style>
+      .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50%;
+        height: 50%;
+        background: linear-gradient(to left, lightblue, gray);
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .success {
+        color: green;
+      }
+      .error {
+        color: red;
+      }
+      .title-lightblue {
+        color: lightblue;
+      }
+      .title-darkgray {
+        color: #eeedeb;
+      }
+      .enter-button {
+        width: 100px;
+        padding: 6px;
+        font-size: 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-left: 15px;
+        border: 1px solid #fff;
+        background: linear-gradient(to left, lightblue, gray);
+        color: #fff;
+      }
+      .enter-button:hover {
+        background-color: lightblue;
+        color: white;
+      }
+      .password-input {
+        padding: 10px;
+        width: 250px;
+        border-radius: 5px;
+        border: none;
+      }
+      .valid-check {
+        color: green;
+        font-size: 20px;
+        display: none;
+      }
+
+      .styled-login-form {
+        justify-content: center;
+        align-items: center;
+        display: flex;
+      }
+      .animation-text {
+        color: #eeedeb;
+        letter-spacing: 1px;
+      }
+      .info-footer {
+        margin-top: 40px;
+        font-size: 20px;
+        font-weight: 700;
+        text-align: center;
+        letter-spacing: 1px;
+      }
+      .info-footer p {
+        color: lightblue;
+      }
+      .info-footer span{
+        color: #eeedeb;
+      }
+      /* MEDIA STYLE */
+      @media (max-width: 768px) {
+        .container {
+            width: 100%;
+            height: 60%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <p
+        id="partnerText"
+        style="
+          font-size: 22px;
+          color: #eeedeb;
+          text-align: center;
+          margin-top: 40px;
+        "
+      >
+        <b>Your trusted partner for e-documents and e-signatures.</b>
+      </p>
+
+      <h1 id="title" style="font-size: 54px; text-align: center">
+        <span class="title-lightblue">SignDoc</span>
+        <span class="title-darkgray">App</span>
+        <span style="font-size: 12px">™</span>
+      </h1>
+
+      <h2
+        style="animation: blinking 1s infinite; text-align: center"
+        class="animation-text"
+      >
+        Insert password
+      </h2>
+
+      <style>
+        @keyframes blinking {
+          0% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0;
+          }
+          100% {
+            opacity: 1;
+          }
+        }
+      </style>
+
+      <form id="loginForm" class="styled-login-form">
+        <label for="password"></label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="password-input"
+          required
+        />
+        <span id="validCheck" class="valid-check">✔</span>
+        <span id="message"></span>
+        <br /><br />
+        <!-- smeneto class na enter-button od back-button -->
+        <button type="submit" class="enter-button">Enter</button> 
+      </form>
+
+      <!-- <p style="text-align: center" class="info-footer">
+        <b id="info">Info:</b> <i>+389 78 395 246;</i>    
+        <b id="mail">E-mail:</b>signdoc.share@gmail.com
+        <b id="mail"> ©2024</b>
+      </p> -->
+
+      <!-- NOV KOD MOJ  -->
+      <div class="info-footer">
+        <p id="info">Info: <span>+389 78 395 246;</span></p>
+        <p id="mail">E-mail: <span>signdoc.share@gmail.com</span></p>
+        <p id="mail">©2024</p>
+      </div>
+    </div>
+    <script>
+      const validPasswords = [
+        "Andon0512!",
+        "02001",
+        "02002",
+        "03001",
+        "04001",
+        "05001",
+        "06001",
+        "07001",
+        "08001",
+        "09001",
+        "01111",
+        "111111",
+        "12345",
+        "admin01",
+      ];
+      const form = document.getElementById("loginForm");
+      const passwordInput = document.getElementById("password");
+      const messageSpan = document.getElementById("message");
+      const validCheck = document.getElementById("validCheck");
+
+      passwordInput.addEventListener("input", function () {
+        const password = passwordInput.value;
+        if (validPasswords.includes(password)) {
+          validCheck.style.display = "inline";
+        } else {
+          validCheck.style.display = "none";
+        }
+      });
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        const password = passwordInput.value;
+
+        if (validPasswords.includes(password)) {
+          messageSpan.textContent = "Correct";
+          messageSpan.className = "success";
+          if (window.location.hostname === "192.168.0.102") {
+            window.location.href = "http://192.168.0.102:8082/Home1.html";
+          } else {
+            window.location.href =
+              "file:///C:/Users/mnikolov/Desktop/HTML/Home1.html";
+          }
+        } else {
+          messageSpan.textContent = "Wrong";
+          messageSpan.className = "error";
+        }
+      });
+    </script>
+  </body>
+</html>
