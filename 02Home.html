@@ -1,228 +1,488 @@
 <!DOCTYPE html>
 <html lang="mk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SignDoc Catalog</title>
     <style>
-        .back-button {
-            background-color: white;
-            border: 2px solid lightblue;
-            color: lightblue;
-            padding: 10px 20px;
-            font-size: 15px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
-            width: 150px;
-            height: 50px;
-            margin: 10px 0;
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+      }
+      .back-button {
+        background-color: white;
+        border: 2px solid lightblue;
+        color: lightblue;
+        padding: 10px 20px;
+        font-size: 15px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s, color 0.3s;
+        width: 150px;
+        height: 50px;
+        margin: 10px 0;
+      }
+      .disabled-button {
+        background-color: gray;
+        border: 2px solid gray;
+        color: white;
+        cursor: not-allowed;
+      }
+      .back-button:hover {
+        background-color: lightblue;
+        color: white;
+      }
+      .logout-button {
+        width: 175px;
+        height: 50px;
+        background-color: red;
+        color: #fefefe;
+        font-size: 17px;
+        border: none;
+        border-radius: 5px;
+        font-weight: 600;
+        margin: 10px;
+        cursor: pointer;
+      }
+      .logout-button:hover {
+        background: linear-gradient(to bottom, red, #eeedeb);
+        color: #fff;
+        cursor: pointer;
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.4);
+        padding-top: 60px;
+      }
+      .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(to left, lightblue, gray);
+        /* margin: 5% auto; */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 450px;
+        height: 350px;
+        border-radius: 10px;
+        /* animation: blinking 1s infinite; */
+      }
+      /* .blinking-border {
+        animation: blinking 1s infinite;
+      } */
+      /* @keyframes blinking {
+        0% {
+          border-color: red;
         }
-        .disabled-button {
-            background-color: gray;
-            border: 2px solid gray;
-            color: white;
-            cursor: not-allowed;
+        50% {
+          border-color: transparent;
         }
-        .back-button:hover {
-            background-color: lightblue;
-            color: white;
+        100% {
+          border-color: red;
+        }
+      } */
+      .valid-border {
+        border-color: green !important;
+      }
+      input::placeholder {
+        font-size: 20px;
+        letter-spacing: 1px !important;
+      }
+      .modal h4 {
+        font-size: 20px;
+        color: #ededed;
+        font-weight: 650;
+      }
+      .password-input {
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center;
+        width: 440px;
+        height: 50px;
+        border: none !important;
+        border-radius: 10px;
+      }
+
+      .back-button {
+        padding: 15px 30px;
+        font-size: 20px;
+        border-radius: 10px;
+        margin: 15px 0;
+        width: 200px;
+        height: 60px;
+      }
+      .styled-row {
+        display: flex;
+        justify-content: space-between;
+      }
+      .styled-row p {
+        color: #eeedeb;
+        font-size: 23px;
+        font-weight: 700;
+        text-decoration: overline;
+        margin: 10px 10px;
+      }
+      .heading-text {
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        font-size: 30px;
+      }
+      .heading-text h1 {
+        color: lightblue;
+      }
+      .heading-text span {
+        color: #eeedeb;
+      }
+
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        text-align: center;
+        margin-top: 60px;
+        border-left: 1.3px solid lightblue;
+        border-right: 1.3px solid gray;
+        width: 800px;
+        margin: 0 auto;
+      }
+
+      .grid-container b {
+        margin-bottom: 10px;
+        color: #eeedeb;
+        font-size: 20px;
+      }
+
+      .grid-container button {
+        margin-top: 10px;
+      }
+      .last-styled {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        border-bottom: 1px solid lightblue;
+        margin-top: 35px;
+      }
+      .last-styled b {
+        color: #eeedeb;
+        margin-bottom: 10px;
+        font-size: 20px;
+      }
+
+      .info-footer {
+        width: 100%;
+        font-size: 20px;
+        font-weight: 700;
+        text-align: center;
+        letter-spacing: 1px;
+        margin-top: 65px;
+      }
+      .info-footer p {
+        color: lightblue;
+      }
+      .info-footer span {
+        color: #eeedeb;
+      }
+      .container {
+        background: linear-gradient(to left, lightblue, gray);
+        width: 100%;
+        height: 100%;
+      }
+      @media (max-width: 768px) {
+        .container {
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(to bottom, lightblue, gray);
         }
         .logout-button {
-            background-color: white;
-            border: 2px solid gray;
-            color: red;
-            padding: 10px 20px;
-            font-size: 15px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
-            position: left ;
-            top: 10px;
-            right: 10px;
+          width: 100px;
+          height: 50px;
         }
-        .logout-button:hover {
-            background-color: lightgray;
-            color: darkred;
+        .styled-row p {
+          font-size: 17px;
         }
-        .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 1; 
-            left: 0;
-            top: 0;
-            width: 100%; 
-            height: 100%; 
-            overflow: auto; 
-            background-color: rgb(0,0,0); 
-            background-color: rgba(0,0,0,0.4); 
-            padding-top: 60px; 
+        .grid-container {
+          border: none !important;
         }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto; 
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%; 
-            max-width: 300px;
-            animation: blinking 1s infinite;
+        .last-styled b {
+          color: #eeedeb;
         }
-        .blinking-border {
-            animation: blinking 1s infinite;
+        .info-footer {
+          width: 100%;
+          font-size: 20px;
+          font-weight: 700;
+          text-align: center;
+          letter-spacing: 1px;
+          margin-top: -35px;
         }
-        @keyframes blinking {
-            0% { border-color: red; }
-            50% { border-color: transparent; }
-            100% { border-color: red; }
-        }
-        .valid-border {
-            border-color: green !important;
-        }
-        .password-input {
-            margin-left: -10px;
-        }
-        body {
-            font-size: 20px;
-            line-height: 1.6;
-        }
-        .back-button, .logout-button {
-            padding: 15px 30px;
-            font-size: 20px;
-            border-radius: 10px;
-            margin: 15px 0;
-            width: 200px;
-            height: 60px;
-        }
+      }
     </style>
-</head>
-<body>
-    <button type="button" onclick="goToHome()" class="logout-button">Log Out</button>
-    <br><br>
-    <p id="partnerText" style="font-size: 15px; color: lightgray; text-align: left;"><b>Your trusted partner for e-documents and e-signatures.</b></p>
+  </head>
+  <body>
+    <div class="container">
+      <!-- NEW CODE  -->
+      <div class="styled-row">
+        <button type="button" onclick="goToHome()" class="logout-button">
+          Log Out
+        </button>
+        <p>Your trusted partner for e-documents and e-signatures.</p>
+      </div>
 
-    <h1 id="title" style="font-size: 54px; text-align: left;">
-        <span style="color: lightblue;">SignDoc</span> 
-        <span style="color: darkgray;">Catalog</span> 
-        
-    </h1>
+      <!-- <button type="button" onclick="goToHome()" class="logout-button">
+        Log Out
+      </button>
+      <div
+        id="partnerText"
+        style="font-size: 15px; color: lightgray; text-align: right">
+        <p>Your trusted partner for e-documents and e-signatures.</p>
+      </div> -->
 
-    <div style="text-align: left; margin-top: 20px;">
-	<b style="margin-left: 10px;">Application for tracking materials</b><br>
-        <button onclick="showPasswordPrompt('share')" class="back-button">SignDoc Share</button><b style="margin-left: 10px;"><br><br>
-		<b style="margin-left: 10px;">Panel for Warehouse/SignDoc Super Admin<BR><I>(main base)</i></b><br>
-        <button onclick="showPasswordPrompt('admin')" class="back-button">W/SSA</button><br><br>
-		<b style="margin-left: 10px;">Warehouse menu</b><br>
-        <button onclick="showPasswordPrompt('warehouseMenu')" class="back-button">Warehouse</button><br><BR>
-		</b><b style="margin-left: 10px;">Information for % of Waste</b><br>
-        <!-- Remove 'disabled-button' class and 'disabled' attribute -->
-        <button onclick="goToWaste()" class="back-button">Waste</button><BR><BR>
-		<b style="margin-left: 10px;">Convert from .csv</b><br>
-        <button onclick="goToConverter()" class="back-button">Converter</button><BR><BR>
-		
-    </div>
+      <!-- <h1 id="title" style="font-size: 54px; text-align: left">
+        <span style="color: lightblue">SignDoc</span>
+        <span style="color: darkgray">Catalog</span>
+      </h1> -->
 
-    <div id="passwordModal" class="modal">
-        <div class="modal-content">
-            <input type="password" id="passwordInput" placeholder="Your password" class="blinking-border password-input" style="font-size: 20px; padding: 10px; width: 100%;">
-            <p id="passwordMessage" style="text-align: center; font-size: 16px;"></p>
-            <button id="enterButton" onclick="redirectToPage()" class="back-button" disabled style="width: 100%; margin-top: 10px;">Enter</button>
-            <button id="cancelButton" onclick="cancelForm()" class="back-button" style="width: 100%; margin-top: 10px;">Cancel</button>
+      <!-- NEW CODE -->
+      <div class="heading-text">
+        <h1 id="title">
+          SignDoc <span>Catalog</span>
+          <!-- <span style="color: lightblue">SignDoc</span>
+          <span style="color: darkgray">Catalog</span> -->
+        </h1>
+      </div>
+
+      <!-- <div style="text-align: ce; margin-top: 20px">
+        <b style="margin-left: 10px">Application for tracking materials</b
+        ><br />
+        <button onclick="showPasswordPrompt('share')" class="back-button">
+          SignDoc Share</button
+        ><b style="margin-left: 10px"
+          ><br /><br />
+          <b style="margin-left: 10px"
+            >Panel for Warehouse/SignDoc Super Admin<br /><i>(main base)</i></b
+          ><br />
+          <button onclick="showPasswordPrompt('admin')" class="back-button">
+            W/SSA</button
+          ><br /><br />
+          <b style="margin-left: 10px">Warehouse menu</b><br />
+          <button
+            onclick="showPasswordPrompt('warehouseMenu')"
+            class="back-button"
+          >
+            Warehouse</button
+          ><br /><br /> </b
+        ><b style="margin-left: 10px">Information for % of Waste</b><br />
+        <button onclick="goToWaste()" class="back-button">Waste</button
+        ><br /><br />
+        <b style="margin-left: 10px">Convert from .csv</b><br />
+        <button onclick="goToConverter()" class="back-button">Converter</button
+        ><br /><br />
+      </div> -->
+
+      <!-- NOV KOD  -->
+      <div class="grid-container">
+        <div>
+          <b>Application for tracking materials</b><br />
+          <button onclick="showPasswordPrompt('share')" class="back-button">
+            SignDoc Share
+          </button>
         </div>
-    </div>
+        <div>
+          <b>Panel for Main Base - Super Admin Menu</b>
+          <br />
+          <button onclick="showPasswordPrompt('admin')" class="back-button">
+            W/SSA
+          </button>
+        </div>
 
-    <div id="dataDisplay" style="margin-top: 20px;"></div>
-    <br><br>
-    <p style="font-size: 12px; text-align: left">
-        <b id="info" style="color: lightblue;">info:</b> <i>+389 78 395 246;</i>
-        <b id="mail" style="color: lightblue;"> mail:</b>signdoc.share@gmail.com <b id="mail" style="color: lightblue;">      © </b>2024
-    </p>
+        <div>
+          <b>Warehouse menu</b><br />
+          <button
+            onclick="showPasswordPrompt('warehouseMenu')"
+            class="back-button"
+          >
+            Warehouse
+          </button>
+        </div>
+        <div>
+          <b>Information for % of Waste</b><br />
+          <button onclick="goToWaste()" class="back-button">Waste</button>
+        </div>
+      </div>
+      <div class="last-styled">
+        <b>Convert from .csv</b>
+        <button onclick="goToConverter()" class="back-button">Converter</button>
+      </div>
+
+      <div id="passwordModal" class="modal">
+        <div class="modal-content">
+          <h4>Enter your password</h4>
+          <input
+            type="password"
+            id="passwordInput"
+            placeholder="Password"
+            class="blinking-border password-input"
+          />
+          <p
+            id="passwordMessage"
+            style="text-align: center; font-size: 16px"
+          ></p>
+          <button
+            id="enterButton"
+            onclick="redirectToPage()"
+            class="back-button"
+            disabled
+            style="width: 100%; margin-top: 10px"
+          >
+            Enter
+          </button>
+          <button
+            id="cancelButton"
+            onclick="cancelForm()"
+            class="back-button"
+            style="width: 100%; margin-top: 10px"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+
+      <div id="dataDisplay" style="margin-top: 20px"></div>
+      <br /><br />
+      <div class="info-footer">
+        <p id="info">Info: <span>+389 78 395 246;</span></p>
+        <p id="mail">E-mail: <span>signdoc.share@gmail.com</span></p>
+        <p id="mail">©2024</p>
+      </div>
+    </div>
 
     <script>
-        let redirectPage = '';
+      let redirectPage = "";
 
-        function showPasswordPrompt(page) {
-            redirectPage = page;
-            document.getElementById('passwordModal').style.display = 'block';
+      function showPasswordPrompt(page) {
+        redirectPage = page;
+        document.getElementById("passwordModal").style.display = "block";
+      }
+
+      function checkPassword() {
+        const validPasswords = [
+          "Andon0512!",
+          "admin01",
+          "02001",
+          "02002",
+          "03001",
+          "04001",
+          "05001",
+          "06001",
+          "07001",
+          "08001",
+          "09001",
+          "01111",
+          "111111",
+          "12345",
+          "admin01",
+        ];
+        const warehousePasswords = ["Andon0512!", "admin01", "02002"];
+        const password = document.getElementById("passwordInput").value;
+        const passwordInput = document.getElementById("passwordInput");
+        const passwordMessage = document.getElementById("passwordMessage");
+
+        if (redirectPage === "share" && validPasswords.includes(password)) {
+          document.getElementById("enterButton").disabled = false;
+          passwordInput.classList.remove("blinking-border");
+          passwordInput.classList.add("valid-border");
+          passwordMessage.textContent = "Correct";
+          passwordMessage.style.color = "green";
+        } else if (
+          redirectPage === "warehouse" &&
+          warehousePasswords.includes(password)
+        ) {
+          document.getElementById("enterButton").disabled = false;
+          passwordInput.classList.remove("blinking-border");
+          passwordInput.classList.add("valid-border");
+          passwordMessage.textContent = "Correct";
+          passwordMessage.style.color = "green";
+        } else if (
+          redirectPage === "admin" &&
+          (password === "Andon0512!" || password === "admin01")
+        ) {
+          document.getElementById("enterButton").disabled = false;
+          passwordInput.classList.remove("blinking-border");
+          passwordInput.classList.add("valid-border");
+          passwordMessage.textContent = "Correct";
+          passwordMessage.style.color = "green";
+        } else if (
+          redirectPage === "warehouseMenu" &&
+          warehousePasswords.includes(password)
+        ) {
+          document.getElementById("enterButton").disabled = false;
+          passwordInput.classList.remove("blinking-border");
+          passwordInput.classList.add("valid-border");
+          passwordMessage.textContent = "Correct";
+          passwordMessage.style.color = "green";
+        } else {
+          document.getElementById("enterButton").disabled = true;
+          passwordInput.classList.remove("valid-border");
+          passwordInput.classList.add("blinking-border");
+          passwordMessage.textContent = "Wrong";
+          passwordMessage.style.color = "red";
         }
+      }
 
-        function checkPassword() {
-            const validPasswords = ["Andon0512!","admin01","02001", "02002", "03001", "04001", "05001", "06001", "07001", "08001", "09001", "01111", "111111", "12345", "admin01"];
-            const warehousePasswords = ["Andon0512!", "admin01", "02002"];
-            const password = document.getElementById('passwordInput').value;
-            const passwordInput = document.getElementById('passwordInput');
-            const passwordMessage = document.getElementById('passwordMessage');
-
-            if (redirectPage === 'share' && validPasswords.includes(password)) {
-                document.getElementById('enterButton').disabled = false;
-                passwordInput.classList.remove('blinking-border');
-                passwordInput.classList.add('valid-border');
-                passwordMessage.textContent = 'Correct';
-                passwordMessage.style.color = 'green';
-            } else if (redirectPage === 'warehouse' && warehousePasswords.includes(password)) {
-                document.getElementById('enterButton').disabled = false;
-                passwordInput.classList.remove('blinking-border');
-                passwordInput.classList.add('valid-border');
-                passwordMessage.textContent = 'Correct';
-                passwordMessage.style.color = 'green';
-            } else if (redirectPage === 'admin' && (password === 'Andon0512!' || password === 'admin01')) {
-                document.getElementById('enterButton').disabled = false;
-                passwordInput.classList.remove('blinking-border');
-                passwordInput.classList.add('valid-border');
-                passwordMessage.textContent = 'Correct';
-                passwordMessage.style.color = 'green';
-            } else if (redirectPage === 'warehouseMenu' && warehousePasswords.includes(password)) {
-                document.getElementById('enterButton').disabled = false;
-                passwordInput.classList.remove('blinking-border');
-                passwordInput.classList.add('valid-border');
-                passwordMessage.textContent = 'Correct';
-                passwordMessage.style.color = 'green';
-            } else {
-                document.getElementById('enterButton').disabled = true;
-                passwordInput.classList.remove('valid-border');
-                passwordInput.classList.
-				add('blinking-border');
-                passwordMessage.textContent = 'Wrong';
-                passwordMessage.style.color = 'red';
-            }
+      function redirectToPage() {
+        if (redirectPage === "share") {
+          location.href = "http://192.168.0.102:8082/";
+        } else if (redirectPage === "warehouse") {
+          location.href = "http://192.168.0.102:8081/Warehouse.html";
+        } else if (redirectPage === "admin") {
+          location.href = "http://192.168.0.102:8082/SU_Admin_Panel.html";
+        } else if (redirectPage === "warehouseMenu") {
+          location.href = "http://192.168.0.102:8082/Warehouse-pa-kw.html";
         }
+      }
 
-        function redirectToPage() {
-            if (redirectPage === 'share') {
-                location.href = 'http://192.168.0.102:8082/';
-            } else if (redirectPage === 'warehouse') {
-                location.href = 'http://192.168.0.102:8081/Warehouse.html';
-            } else if (redirectPage === 'admin') {
-                location.href = 'http://192.168.0.102:8082/SU_Admin_Panel.html';
-            } else if (redirectPage === 'warehouseMenu') {
-                location.href = 'http://192.168.0.102:8082/Warehouse-pa-kw.html';
-            }
+      function cancelForm() {
+        document.getElementById("passwordModal").style.display = "none";
+      }
+
+      function goToHome() {
+        location.href = "http://192.168.0.102:8081/";
+      }
+
+      function goToConverter() {
+        location.href = "http://192.168.0.102:8082/SignDoc%20Converter.html";
+      }
+
+      // Add this function to handle the Waste button click
+      function goToWaste() {
+        location.href = "http://192.168.0.102:8082/SignDoc%20Waste.html";
+      }
+
+      document
+        .getElementById("passwordInput")
+        .addEventListener("input", checkPassword);
+
+      window.onclick = function (event) {
+        const modal = document.getElementById("passwordModal");
+        if (event.target == modal) {
+          modal.style.display = "none";
         }
-
-        function cancelForm() {
-            document.getElementById('passwordModal').style.display = 'none';
-        }
-
-        function goToHome() {
-            location.href = 'http://192.168.0.102:8081/';
-        }
-
-        function goToConverter() {
-            location.href = 'http://192.168.0.102:8082/SignDoc%20Converter.html';
-        }
-
-        // Add this function to handle the Waste button click
-        function goToWaste() {
-            location.href = 'http://192.168.0.102:8082/SignDoc%20Waste.html';
-        }
-
-        document.getElementById('passwordInput').addEventListener('input', checkPassword);
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('passwordModal');
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
+      };
     </script>
-</body>
+  </body>
 </html>

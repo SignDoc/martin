@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Document</title>
+    <meta charset="utf-8" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <!-- BOOTSTRAP CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+      crossorigin="anonymous"
+    />
+    <!-- BOOTSTRAP ICONS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css"
+    />
+  </head>
+  <style>
+    
+    .container {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to left, lightblue, gray);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .logout-btn {
+      border: none;
+      border-radius: 5px;
+      background: linear-gradient(to left, red, #eeedeb);
+      color: #eeedeb;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-weight: 600;
+    }
+
+    .logout-btn:hover {
+      background: linear-gradient(to left, #eeedeb, red);
+    }
+    .style-paragraph {
+      color: #eeedeb;
+      font-size: 25px;
+    }
+    .head-text{
+        color: lightblue;
+        font-weight: 700;
+        letter-spacing: 1px;
+        font-size: 45px;
+    }
+    .head-text span{
+        color: #eeedeb;
+    }
+    .section-catalog h4{
+        color: #eeedeb;
+       font-size: 20px;
+       font-weight: 500;
+    }
+    .styled-btn{
+        background-color: lightblue;
+        border: none;
+        padding: 10px 20px;
+        color: #eeedeb;
+        font-weight: 700;
+        border-radius: 5px;
+        letter-spacing: 1px;
+    }
+  </style>
+  <body>
+    <div class="container px-4">
+      <div class="row mt-2 justify-content-center align-items-center">
+        <div class="col-6">
+          <button type="button" onclick="goToHome()" class="logout-btn">
+            Log out
+          </button>
+        </div>
+        <div class="col-6">
+          <p class="text-end style-paragraph">
+            Your trusted partner for e-documents and e-signatures
+          </p>
+        </div>
+        <div id="title" class="col-12">
+          <h1 class="text-center my-3 head-text">SignDoc <span>Catalog</span></h1>
+        </div>
+      </div>
+      <div class="section-catalog mt-5">
+        <div class="row my-3">
+          <div class="col-lg-6">
+            <h4>Application for tracking materials</h4>
+            <button onclick="showPasswordPromp('share')" class="styled-btn">
+              SignDoc Share
+            </button>
+          </div>
+          <div class="col-lg-6">
+            <h4>
+              Panel for Warehouse/SignDoc Super Admin <br /><span
+                >(Main base)</span
+              >
+            </h4>
+            <button onclick="showPasswordPromp('admin')" class="styled-btn">
+              W/SSA
+            </button>
+          </div>
+          <div class="col-lg-6">
+            <h4>Warehouse menu</h4>
+            <button
+              onclick="showPasswordPrompt('warehouseMenu')"
+              class="styled-btn"
+            >
+              Warehouse
+            </button>
+          </div>
+          <div class="col-lg-6">
+            <h4>Information for % of Waste</h4>
+            <button onclick="goToWaste()" class="styled-btn">Warehouse</button>
+          </div>
+
+          <div class="col-lg-12">
+            <h4>Convert from .csv</h4>
+            <button class="styled-btn" onclick="goToConverter()">
+              Converter
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="passwordModal" class="modal">
+        <div class="modal-content">
+          <input
+            type="password"
+            id="passwordInput"
+            placeholder="Your password"
+            class="blinking-border password-input"
+            style="font-size: 20px; padding: 10px; width: 100%"
+          />
+          <p
+            id="passwordMessage"
+            style="text-align: center; font-size: 16px"
+          ></p>
+          <button
+            id="enterButton"
+            onclick="redirectToPage()"
+            class="back-button"
+            disabled
+            style="width: 100%; margin-top: 10px"
+          >
+            Enter
+          </button>
+          <button
+            id="cancelButton"
+            onclick="cancelForm()"
+            class="back-button"
+            style="width: 100%; margin-top: 10px"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- POPPER JS -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+      integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- BOOTSTRAP JS -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
+      integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
+      crossorigin="anonymous"
+    ></script>
+
+
+    <script>
+        let redirectPage = '';
+
+        function showPasswordPrompt(page) {
+            redirectPage = page;
+            document.getElementById('passwordModal').style.display = 'block';
+        }
+
+        function checkPassword() {
+            const validPasswords = ["Andon0512!","admin01","02001", "02002", "03001", "04001", "05001", "06001", "07001", "08001", "09001", "01111", "111111", "12345", "admin01"];
+            const warehousePasswords = ["Andon0512!", "admin01", "02002"];
+            const password = document.getElementById('passwordInput').value;
+            const passwordInput = document.getElementById('passwordInput');
+            const passwordMessage = document.getElementById('passwordMessage');
+
+            if (redirectPage === 'share' && validPasswords.includes(password)) {
+                document.getElementById('enterButton').disabled = false;
+                passwordInput.classList.remove('blinking-border');
+                passwordInput.classList.add('valid-border');
+                passwordMessage.textContent = 'Correct';
+                passwordMessage.style.color = 'green';
+            } else if (redirectPage === 'warehouse' && warehousePasswords.includes(password)) {
+                document.getElementById('enterButton').disabled = false;
+                passwordInput.classList.remove('blinking-border');
+                passwordInput.classList.add('valid-border');
+                passwordMessage.textContent = 'Correct';
+                passwordMessage.style.color = 'green';
+            } else if (redirectPage === 'admin' && (password === 'Andon0512!' || password === 'admin01')) {
+                document.getElementById('enterButton').disabled = false;
+                passwordInput.classList.remove('blinking-border');
+                passwordInput.classList.add('valid-border');
+                passwordMessage.textContent = 'Correct';
+                passwordMessage.style.color = 'green';
+            } else if (redirectPage === 'warehouseMenu' && warehousePasswords.includes(password)) {
+                document.getElementById('enterButton').disabled = false;
+                passwordInput.classList.remove('blinking-border');
+                passwordInput.classList.add('valid-border');
+                passwordMessage.textContent = 'Correct';
+                passwordMessage.style.color = 'green';
+            } else {
+                document.getElementById('enterButton').disabled = true;
+                passwordInput.classList.remove('valid-border');
+                passwordInput.classList.
+				add('blinking-border');
+                passwordMessage.textContent = 'Wrong';
+                passwordMessage.style.color = 'red';
+            }
+        }
+
+        function redirectToPage() {
+            if (redirectPage === 'share') {
+                location.href = 'http://192.168.0.102:8082/';
+            } else if (redirectPage === 'warehouse') {
+                location.href = 'http://192.168.0.102:8081/Warehouse.html';
+            } else if (redirectPage === 'admin') {
+                location.href = 'http://192.168.0.102:8082/SU_Admin_Panel.html';
+            } else if (redirectPage === 'warehouseMenu') {
+                location.href = 'http://192.168.0.102:8082/Warehouse-pa-kw.html';
+            }
+        }
+
+        function cancelForm() {
+            document.getElementById('passwordModal').style.display = 'none';
+        }
+
+        function goToHome() {
+            location.href = 'http://192.168.0.102:8081/';
+        }
+
+        function goToConverter() {
+            location.href = 'http://192.168.0.102:8082/SignDoc%20Converter.html';
+        }
+
+        // Add this function to handle the Waste button click
+        function goToWaste() {
+            location.href = 'http://192.168.0.102:8082/SignDoc%20Waste.html';
+        }
+
+        document.getElementById('passwordInput').addEventListener('input', checkPassword);
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('passwordModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+  </body>
+</html>

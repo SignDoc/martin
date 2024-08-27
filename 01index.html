@@ -39,11 +39,11 @@
         margin-left: 15px;
         border: 1px solid #fff;
         background: linear-gradient(to left, lightblue, gray);
-        color: #fff;
+        color: #eeedeb;
       }
       .enter-button:hover {
-        background-color: lightblue;
-        color: white;
+        background: linear-gradient(to right, lightblue, gray);
+        color: #eeedeb;
       }
       .password-input {
         padding: 10px;
@@ -138,13 +138,14 @@
           class="password-input"
           required
         />
-        <span id="validCheck" class="valid-check">✔</span>
-        <span id="message"></span>
         <br /><br />
         <!-- smeneto class na enter-button od back-button -->
         <button type="submit" class="enter-button">Enter</button> 
+        <span id="validCheck" class="valid-check">✔</span>
+        <span id="message"></span>
       </form>
-
+      <span id="validCheck" class="valid-check">✔</span>
+      <span id="message"></span> 
       <!-- <p style="text-align: center" class="info-footer">
         <b id="info">Info:</b> <i>+389 78 395 246;</i>    
         <b id="mail">E-mail:</b>signdoc.share@gmail.com
