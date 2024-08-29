@@ -860,7 +860,7 @@
         </p> -->
 
         <div id="messagecanvas" class="message">
-          
+
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
       </form>
@@ -1297,3 +1297,90 @@ canvas.addEventListener("touchcancel", () => (drawing = false));
     </script>
   </body>
 </html>
+
+
+
+
+<!-- Probaj vaka  -->
+<!-- const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+let drawing = false;
+let lastPos = { x: 0, y: 0 };
+
+// Function to resize the canvas resolution
+function resizeCanvas() {
+  // Set the display size
+  const displayWidth = canvas.clientWidth;
+  const displayHeight = canvas.clientHeight;
+
+  // Update the canvas resolution to match the display size
+  canvas.width = displayWidth;
+  canvas.height = displayHeight;
+
+  // Adjust stroke style and line width if needed
+  ctx.strokeStyle = '#000';
+  ctx.lineWidth = 2;
+}
+
+// Call resizeCanvas on load and whenever the window is resized
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function getMousePos(e) {
+  const rect = canvas.getBoundingClientRect();
+  return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+}
+
+function getTouchPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: e.touches[0].clientX - rect.left,
+    y: e.touches[0].clientY - rect.top,
+  };
+}
+
+canvas.addEventListener("mousedown", (e) => {
+  drawing = true;
+  lastPos = getMousePos(e);
+  ctx.beginPath();
+  ctx.moveTo(lastPos.x, lastPos.y);
+});
+
+canvas.addEventListener("mousemove", (e) => {
+  if (!drawing) return;
+  const pos = getMousePos(e);
+  ctx.lineTo(pos.x, pos.y);
+  ctx.stroke();
+  lastPos = pos;
+});
+
+canvas.addEventListener("mouseup", () => (drawing = false));
+canvas.addEventListener("mouseout", () => (drawing = false));
+
+canvas.addEventListener("touchstart", (e) => {
+  e.preventDefault(); // Prevent scrolling
+  drawing = true;
+  lastPos = getTouchPos(e);
+  ctx.beginPath();
+  ctx.moveTo(lastPos.x, lastPos.y);
+});
+
+canvas.addEventListener("touchmove", (e) => {
+  e.preventDefault(); // Prevent scrolling
+  if (!drawing) return;
+  const pos = getTouchPos(e);
+  ctx.lineTo(pos.x, pos.y);
+  ctx.stroke();
+  lastPos = pos;
+});
+
+canvas.addEventListener("touchend", (e) => {
+  e.preventDefault(); // Prevent scrolling
+  drawing = false;
+});
+
+canvas.addEventListener("touchcancel", (e) => {
+  e.preventDefault(); // Prevent scrolling
+  drawing = false;
+}); -->
