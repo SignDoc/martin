@@ -151,19 +151,20 @@
       .grid-container {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
+        gap: 10px;
         text-align: center;
-        margin-top: 60px;
         border-left: 1.3px solid lightblue;
         border-right: 1.3px solid gray;
-        width: 800px;
+        width: 1200px;
+        height: 340px;
         margin: 0 auto;
+        margin-top: 100px !important;
       }
 
       .grid-container b {
         margin-bottom: 10px;
         color: #eeedeb;
-        font-size: 20px;
+        font-size: 26px;
       }
 
       .grid-container button {
@@ -181,7 +182,7 @@
       .last-styled b {
         color: #eeedeb;
         margin-bottom: 10px;
-        font-size: 20px;
+        font-size: 26px;
       }
 
       .info-footer {
@@ -190,7 +191,8 @@
         font-weight: 700;
         text-align: center;
         letter-spacing: 1px;
-        margin-top: 65px;
+        margin-top: 10px;
+        padding-bottom: 10px;
       }
       .info-footer p {
         color: lightblue;
@@ -201,13 +203,26 @@
       .container {
         background: linear-gradient(to left, lightblue, gray);
         width: 100%;
-        height: 100%;
+        /* height: 100vh; */
       }
       @media (max-width: 768px) {
         .container {
           width: 100%;
-          height: 100%;
+          /* height: 100%; */
           background: linear-gradient(to bottom, lightblue, gray);
+        }
+        .heading-text h1{
+          margin-top: 60px !important;
+          border-top: 1px solid #ededed;
+          border-bottom: 1px solid gray;
+          padding: 3px;
+          border-width: 10px;
+        }
+        .grid-container{
+          width: 100%;
+        }
+        .grid-container b{
+          font-size: 20px;
         }
         .logout-button {
           width: 100px;
@@ -218,6 +233,9 @@
         }
         .grid-container {
           border: none !important;
+        }
+        .last-styled{
+          margin-top: -20px !important;
         }
         .last-styled b {
           color: #eeedeb;

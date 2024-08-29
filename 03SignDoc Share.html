@@ -1,700 +1,1173 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SignDoc Share</title>
     <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
-            height: 100vh;
-            margin: 0;
-            padding-top: 50px;
-            padding-left: 10%;
-            background-color: white;
-            transform: scale(1.2);
-        }
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-        }
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(to right, white, lightblue);
 
-        .title {
-            font-size: 54px;
-        }
-        .title-lightblue {
-            color: lightblue;
-        }
-        .title-darkgray {
-            color: darkgray;
-        }
+      }
+      /* body {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        height: 100vh;
+        margin: 0;
+        padding-top: 50px;
+        padding-left: 10%;
+        background-color: white;
+        transform: scale(1.2);
+      }
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+      }
 
-        .highlight {
-            background-color: lightblue;
-        }
-        .button-small {
-            position: relative;
-            left: 65%;
-            transform: scale(1.3);
-            font-size: 8px;
-            padding: 5px 10px;
-        }
-        .button-large {
-            position: relative;
-            left: 50%;
-            transform: translateX(-50%) scale(1.3);
-            font-size: 15px;
-            padding: 10px 20px;
-            margin: 4;
-            display: block;
-        }
-        .location-button {
-            background-color: transparent;
-            border: 2px solid lightblue;
-            padding: 10px 25px;
-            margin: 10px;
-            cursor: pointer;
-            width: 250px;
-            text-align: center;
-            display: inline-block;
-            margin-left: 20px;
-            font-size: 18px;
-        }
-        .location-button.selected {
-            background-color: green;
-            color: white;
-        }
-        .canvas {
-            width: 400px;
-            height: 150px;
-            border: 5px solid lightblue;
-            position: relative;
-            margin-top: 0px;
-        }
-        .input-field {
-            display: block;
-            width: 400px;
-            margin-left: 0px;
-        }
-        .borrowed-material {
-            font-size: 90%;
-        }
-        .borrowed-input {
-            width: 98%;
-        }
-        .gray-box {
-            background-color: lightgray;
-            padding: 8px;
-            border-radius: 3px;
-            width: 80%;
-            transform: scale(0.9);
-            margin-left: -20px;
-        }
-		.gray-box.borrowed-material {
-    background-color: lightgray;
-    padding: 8px;
-    border-radius: 3px;
-    width: 400px; /* Променета ширина за да биде иста како полињата за лозинка, KW, PA */
-    transform: scale(0.9);
-    margin-left: 0; /* Поусогласено со другите полиња */
+      .title {
+        font-size: 54px;
+      }
+      .title-lightblue {
+        color: lightblue;
+      }
+      .title-darkgray {
+        color: darkgray;
+      }
+
+      .highlight {
+        background-color: lightblue;
+      }
+      .button-small {
+        position: relative;
+        left: 65%;
+        transform: scale(1.3);
+        font-size: 8px;
+        padding: 5px 10px;
+      }
+      .button-large {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%) scale(1.3);
+        font-size: 15px;
+        padding: 10px 20px;
+        margin: 4;
+        display: block;
+      }
+      .location-button {
+        background-color: transparent;
+        border: 2px solid lightblue;
+        padding: 10px 25px;
+        margin: 10px;
+        cursor: pointer;
+        width: 250px;
+        text-align: center;
+        display: inline-block;
+        margin-left: 20px;
+        font-size: 18px;
+      }
+      .location-button.selected {
+        background-color: green;
+        color: white;
+      }
+      .canvas {
+        width: 400px;
+        height: 150px;
+        border: 5px solid lightblue;
+        position: relative;
+        margin-top: 0px;
+      }
+      .input-field {
+        display: block;
+        width: 400px;
+        margin-left: 0px;
+      }
+      .borrowed-material {
+        font-size: 90%;
+      }
+      .borrowed-input {
+        width: 98%;
+      }
+      .gray-box {
+        background-color: lightgray;
+        padding: 8px;
+        border-radius: 3px;
+        width: 80%;
+        transform: scale(0.9);
+        margin-left: -20px;
+      }
+      .gray-box.borrowed-material {
+        background-color: lightgray;
+        padding: 8px;
+        border-radius: 3px;
+        width: 400px;
+        transform: scale(0.9);
+        margin-left: 0; 
+      }
+
+      .input-field.borrowed-input {
+        width: 100%; 
+        margin-left: 0; 
+      }
+
+      .message {
+        color: green;
+      }
+      .form-row {
+        margin-bottom: 15px;
+      }
+      .small-select {
+        font-size: 14px;
+        padding: 5px;
+        width: 170px;
+        text-align: center;
+        text-align-last: center;
+        color: gray;
+        background-color: white;
+        border: 1px solid lightblue;
+      }
+      .name-row {
+        display: flex;
+        justify-content: space-between;
+        width: 395px;
+      }
+      .name-input {
+        width: 190px;
+        margin-right: 10px;
+      }
+      .last-name-input {
+        width: 190px;
+      }
+      #newSignatureButton {
+        background-color: white;
+        color: gray;
+        border: 2px solid lightblue;
+        padding: 10px 20px;
+        font-size: 7px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s, color 0.3s;
+        left: 200px;
+      }
+      #newSignatureButton:hover {
+        background-color: lightblue;
+        color: white;
+      }
+      #partnerText {
+        font-size: 20px;
+        color: lightgray;
+        text-align: center;
+        margin-top: 50px;
+      }
+      .language-fullscreen {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 70px;
+      }
+
+      .logout-button {
+        width: 175px;
+        height: 50px;
+        background-color: red;
+        color: #fefefe;
+        font-size: 17px;
+        border: none;
+        border-radius: 5px;
+        font-weight: 600;
+        margin: 10px;
+        cursor: pointer;
+      }
+      .logout-button:hover {
+        background: linear-gradient(to bottom, red, #eeedeb);
+        color: #fff;
+        cursor: pointer;
+      }
+      .fullscreen-icon {
+        margin-left: 20px; 
+      }
+
+      .language-fullscreen select {
+        margin-right: 200px;
+      }
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border: 2px solid lightblue;
+      }
+      #submit-button {
+        background-color: white;
+        color: lightblue;
+        border: 2px solid lightblue;
+        padding: 10px 20px;
+        font-size: 15px;
+        cursor: not-allowed;
+        border-radius: 5px;
+        transition: background-color 0.3s, color 0.3s;
+        position: relative;
+        left: 200px;
+      }
+      #submit-button:enabled {
+        background-color: gray;
+        color: lightblue;
+        cursor: pointer;
+      }
+      #submit-button:enabled:hover {
+        background-color: gray;
+        color: white;
+      }
+      .reset-button {
+        background: white;
+        border: 1px solid gray;
+        cursor: pointer;
+        font-size: 24px;
+        color: gray;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+      }
+      .signature-container {
+        position: relative;
+        width: 100%;
+        margin-top: 0;
+      }
+      .large-checkbox {
+        width: 30px;
+        height: 30px;
+      }
+      .back-button {
+        background-color: white;
+        border: 2px solid lightblue;
+        color: lightblue;
+        padding: 10px 20px;
+        font-size: 15px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      .back-button:hover {
+        background-color: lightblue;
+        color: white;
+      } */
+
+      .container {
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+      }
+      .language-fullscreen {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .language-fullscreen p {
+        color: #eeedeb;
+        font-size: 23px;
+        font-weight: 700;
+        text-decoration: overline;
+        margin: 10px 10px;
+      }
+      .logout-button {
+        width: 175px;
+        height: 50px;
+        background-color: red;
+        color: #fefefe;
+        font-size: 17px;
+        border: none;
+        border-radius: 5px;
+        font-weight: 600;
+        margin: 10px;
+        cursor: pointer;
+      }
+      .logout-button:hover {
+        background: linear-gradient(to bottom, red, #eeedeb);
+        color: #fff;
+        cursor: pointer;
+      }
+      .fullscreen-icon {
+        background-color: lightblue;
+        color: #eeedeb;
+        border: none;
+        width: 175px;
+        height: 50px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .fullscreen-icon svg {
+        width: 100px;
+      }
+      .heading-text {
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        margin-top: 75px;
+      }
+      .heading-text h1 {
+        font-size: 65px;
+        color: lightblue;
+      }
+      .heading-text span {
+        color: gray;
+      }
+      .grid-container {
+        position: absolute;
+        top: 90%;
+        left: 35%;
+        transform: translate(-90%, -50%);
+        height: 100%;
+      }
+
+      .form-row label {
+        margin-top: 15px;
+        color: gray;
+        font-size: 17px;
+      }
+      .form-section {
+        display: grid;
+        flex-direction: column;
+      }
+      .form-section button {
+        margin-bottom: 10px;
+      }
+      .form-section h4 {
+        color: gray;
+        font-size: 18px;
+        font-weight: 800;
+      }
+      .location-button {
+        padding: 10px;
+        color: #eeedeb;
+        background-color: lightblue;
+        font-size: 17px;
+        font-weight: 600;
+        border: 1px solid #747272;
+        border-radius: 10px;
+        letter-spacing: 1px;
+      }
+      .location-button:hover {
+        cursor: pointer;
+        background-color: rgb(122, 122, 122);
+        color: #fff;
+      }
+      .name-row {
+        display: flex;
+        width: 100%;
+        margin-bottom: 0;
+      }
+      .name-row h4 {
+        font-size: 23px;
+        color: gray;
+      }
+      .input-field {
+        margin-right: 10px;
+        padding: 10px;
+        border: 1px solid lightblue;
+        font-size: 15px;
+        margin-bottom: 0;
+      }
+      .second-row {
+        display: grid;
+        width: 100%;
+        margin-top: 15px;
+      }
+      .second-row h4 {
+        color: gray;
+        font-size: 23px;
+      }
+      .input-field-pw {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid lightblue;
+        font-size: 15px;
+      }
+      .pw-row h4 {
+        color: gray;
+        font-size: 23px;
+      }
+      .borrowed-material {
+        position: absolute;
+        display: grid;
+        float: right;
+        top: 40%;
+        left: 50%;
+        margin: 0 auto;
+        flex-direction: column;
+      }
+      .second-form-row b {
+        color: gray;
+        font-size: 17px;
+      }
+      .gray-box {
+        margin-top: 55px;
+        display: grid;
+      }
+      .styled-form-row {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 14px;
+      }
+      .styled-form-row b {
+        color: gray;
+        font-size: 17px;
+      }
+      .styled-form-row label {
+        margin-bottom: 10px;
+      }
+      .styled-form-row input {
+        width: 100% ;
+        height: 20px;
+        background-color: #fff;
+        border: 1px solid lightblue;  
+        font-size: 13px;
+        font-weight: 600;
+      }
+    
+      .styled-form-row textarea {
+  width: 100%;
+  height: 150px; 
+  background-color: #fff;
+  font-size: 17px;
+  font-weight: 600;
+  resize: none; 
 }
-
-.input-field.borrowed-input {
-    width: 100%; /* Промена за да полињата внатре се совпаѓаат со новата ширина на сивото поле */
-    margin-left: 0; /* Поусогласено со другите полиња */
-}
-
-        .message {
-            color: green;
-        }
-        .form-row {
-            margin-bottom: 15px;
-        }
-        .small-select {
-            font-size: 14px;
-            padding: 5px;
-            width: 170px;
-            text-align: center;
-            text-align-last: center;
-            color: gray;
-            background-color: white;
-            border: 1px solid lightblue;
-        }
-        .name-row {
-            display: flex;
-            justify-content: space-between;
-            width: 395px;
-        }
-        .name-input {
-            width: 190px;
-            margin-right: 10px;
-        }
-        .last-name-input {
-            width: 190px;
-        }
-        #newSignatureButton {
-            background-color: white;
-            color: gray;
-            border: 2px solid lightblue;
-            padding: 10px 20px;
-            font-size: 7px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
-            left: 200px;
-        }
-        #newSignatureButton:hover {
-            background-color: lightblue;
-            color: white;
-        }
-        #partnerText {
-            font-size: 20px;
-            color: lightgray;
-            text-align: center;
-            margin-top: 50px;
-        }
-        .language-fullscreen {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Ова осигурува дека копчињата се наредени на лево */
-    margin-top: 70px;
-}
-
-.logout-button {
-    font-size: 20px;
-    color: red;
-    background-color: white;
-    border: 2px solid gray;
-    padding: 10px 20px;
-    cursor: pointer;
-    margin-right: 20px; /* Разделете го Log Out копчето од Full Screen копчето */
-}
-
-.logout-button:hover {
-    background-color: lightgray;
-    color: darkred;
-}
-
-.fullscreen-icon {
-    margin-left: 20px; /* Ова осигурува дека Full Screen копчето е малку на десно од Log Out */
-}
-
-        .language-fullscreen select {
-            margin-right: 200px;
-        }
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border: 2px solid lightblue;
-        }
-        #submit-button {
-            background-color: white;
-            color: lightblue;
-            border: 2px solid lightblue;
-            padding: 10px 20px;
-            font-size: 15px;
-            cursor: not-allowed;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
-            position: relative;
-            left: 200px;
-        }
-        #submit-button:enabled {
-            background-color: gray;
-            color: lightblue;
-            cursor: pointer;
-        }
-        #submit-button:enabled:hover {
-            background-color: gray;
-            color: white;
-        }
-        .reset-button {
-            background: white;
-            border: 1px solid gray;
-            cursor: pointer;
-            font-size: 24px;
-            color: gray;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-        }
-        .signature-container {
-            position: relative;
-            width: 100%;
-            margin-top: 0;
-        }
-        .large-checkbox {
-            width: 30px;
-            height: 30px;
-        }
-        .back-button {
-            background-color: white;
-            border: 2px solid lightblue;
-            color: lightblue;
-            padding: 10px 20px;
-            font-size: 15px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .back-button:hover {
-            background-color: lightblue;
-            color: white;
-        }
-        .logout-button {
-            font-size: 20px;
-            color: red;
-            background-color: white;
-            border: 2px solid gray;
-            padding: 10px 20px;
-            cursor: pointer;
-        }
-        .logout-button:hover {
-            background-color: lightgray;
-            color: darkred;
-        }
+      .signature-form-row{
+        margin-top: 10px;
+      }
+      .signature-form-row b{
+        color: gray;
+        font-size: 23px;
+      }
+      .signature-container{
+        width: 100%;
+        background-color: #fefefe;
+        border: 1px solid lightblue;
+      }
+      .info-footer {
+        width: 100%;
+        font-size: 20px;
+        font-weight: 700;
+        text-align: center;
+        letter-spacing: 1px;
+        margin-top: 10px;
+        padding-bottom: 10px;
+      }
+      .info-footer p {
+        color: lightblue;
+      }
+      .info-footer span {
+        color: #eeedeb;
+      }
     </style>
-</head>
-<body>
-    <form id="myForm">
+  </head>
+  <body>
+    <div class="container">
+      <form id="myForm">
         <div class="language-fullscreen">
-    <button type="button" id="logoutButton" class="logout-button"> Log Out
-	</button>
-    <button type="button" id="fullscreenButton" class="fullscreen-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-            <path d="M0 0h24v24H0z" fill="none"/>
-            <path d="M6 6h5V4H4v7h2V6zm7 0h5v5h2V4h-7v2zm5 12h-5v2h7v-7h-2v5zm-7 0H6v-5H4v7h7v-2z" fill="currentColor"/>
-        </svg>
-    </button>
-</div>
+          <button type="button" id="logoutButton" class="logout-button">
+            Log Out
+          </button>
 
-        <p id="partnerText" style="font-size: 15px; color: lightgray; text-align: center;">Ваш доверлив партнер за е-потписи</p>
-        <h1 id="title" style="font-size: 54px;">
-            <span style="color: lightblue;">SignDoc</span> 
-            <span style="color: darkgray;">Share</span> 
-            <span style="font-size: 12px;">™</span>
-        </h1>
-        <div style="display: flex; justify-content: center; align-items: center;">
-            <p id="user" style="font-size: 12px; color: darkgray; margin-left: 0px;"><strong>👤:  </strong></p>
-            <div style="position: relative; display: inline-block;">
-                <span style="font-size: 12px; color: red; font-weight: bold;">Te</span><span style="font-size: 16px; color: red; font-weight: bold;">x</span><span style="font-size: 12px; color: lightgray; font-weight: bold;">port</span>
-                <sup style="position: absolute; right: -10px; top: 0; font-size: 10px;">®</sup>
-            </div>
+          <button type="button" id="fullscreenButton" class="fullscreen-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="24"
+              height="24"
+            >
+              <path d="M0 0h24v24H0z" fill="none" />
+              <path
+                d="M6 6h5V4H4v7h2V6zm7 0h5v5h2V4h-7v2zm5 12h-5v2h7v-7h-2v5zm-7 0H6v-5H4v7h7v-2z"
+                fill="currentColor"
+              />
+            </svg>
+          </button>
+          <p id="partnerText">Ваш доверлив партнер за е-потписи</p>
         </div>
-        <br>
-        <button type="button" id="newSignatureButton" onclick="resetForm();" class="button-small"><b>Креирај нов е-потпис</b></button>
-        <br><br><br><br>
-        <div class="form-row">
-            <input type="checkbox" id="ispratnicaCheckbox" class="large-checkbox" onchange="toggleDocumentType()">
+
+        <!-- <h1 id="title" style="font-size: 54px">
+          <span style="color: lightblue">SignDoc</span>
+          <span style="color: darkgray">Share</span>
+          <span style="font-size: 12px">™</span>
+        </h1> -->
+
+        <!-- NOV CODE -->
+        <div class="heading-text">
+          <h1 id="title">SignDoc <span>Share™</span></h1>
+        </div>
+
+        <!-- <div
+          style="display: flex; justify-content: center; align-items: center"
+        >
+          <p
+            id="user"
+            style="font-size: 12px; color: darkgray; margin-left: 0px"
+          >
+            <strong>👤:  </strong>
+          </p>
+          <div style="position: relative; display: inline-block">
+            <span style="font-size: 12px; color: red; font-weight: bold"
+              >Te</span
+            ><span style="font-size: 16px; color: red; font-weight: bold"
+              >x</span
+            ><span style="font-size: 12px; color: lightgray; font-weight: bold"
+              >port</span
+            >
+            <sup
+              style="position: absolute; right: -10px; top: 0; font-size: 10px"
+              >®</sup
+            >
+          </div>
+        </div> -->
+
+        <!-- <button
+          type="button"
+          id="newSignatureButton"
+          onclick="resetForm();"
+          class="button-small"
+        >
+          <b>Креирај нов е-потпис</b>
+        </button> -->
+
+        <!-- NOV KOD  -->
+        <!-- <div class="signature-btn">
+          <button
+            type="button"
+            id="newSignatureButton"
+            onclick="resetForm();"
+            class="button-small"
+          >
+            Креирај нов е-потпис
+          </button>
+        </div> -->
+
+        <div class="grid-container">
+          <div class="form-row">
+            <input
+              type="checkbox"
+              id="ispratnicaCheckbox"
+              class="large-checkbox"
+              onchange="toggleDocumentType()"
+            />
             <label for="ispratnicaCheckbox"><b>ИСПРАТНИЦА</b></label>
-            <input type="checkbox" id="priemnicaCheckbox" class="large-checkbox" style="margin-left: 60px;" onchange="toggleDocumentType()">
+            <input
+              type="checkbox"
+              id="priemnicaCheckbox"
+              class="large-checkbox"
+              style="margin-left: 60px"
+              onchange="toggleDocumentType()"
+            />
             <label for="priemnicaCheckbox"><b>ПРИЕМНИЦА</b></label>
-        </div>
-        <div class="form-row">
-            <br>
-            <b id="selectLocation">Одберете локација:</b>
-            <br>
-            <input type="hidden" id="location" required>
-            <button type="button" class="location-button" value="Magacin1" onclick="selectLocation(this)">Магацин1</button>
-            <br>
-            <button type="button" class="location-button" value="Krojnica" onclick="selectLocation(this)">Кројница</button>
-            <br>
-            <button type="button" class="location-button" value="Pogon" onclick="selectLocation(this)">Погон</button>
-            <br>
-            <button type="button" class="location-button" value="Kontrola" onclick="selectLocation(this)">Контрола</button>
-            <br>
-            <button type="button" class="location-button" value="Magacin2" onclick="selectLocation(this)">Магацин2 краен влез</button>
-        </div>
-        <br>
-        <div class="name-row">
-            <div class="form-row">
-                <b id="nameLabel">Име</b> 
-                <input type="text" id="firstName" placeholder="Внесете име" class="input-field name-input" required>
-            </div>
-            <div class="form-row">
-                <b id="lastNameLabel">Презиме</b>
-                <input type="text" id="lastName" placeholder="Внесете презиме" class="input-field last-name-input" required>
-            </div>
-        </div>
-        <br>
-       <div class="form-row">
-    <label for="kw"><b id="kwLabel">KW</b></label>
-    <input type="number" id="kw" placeholder="Внесете го бројот на работна недела" required class="input-field" max="53" min="1" maxlength="2" oninput="validateKW(this)">
-</div>
-        <br>
-       <div class="form-row">
-    <label for="pa"><b id="paLabel">PA</b></label>
-    <input type="number" id="pa" placeholder="Внесете го бројот на налогот" required class="input-field" min="0" oninput="validatePA(this)">
-</div>
-        <br>
-        <div class="form-row">
-            <label for="password"><b id="passwordLabel">Лозинка</b></label>
-            <div style="display: flex; align-items: center;">
-                <input type="password" id="password" oninput="checkPassword()" placeholder="Внесете ја Вашата лозинка" required class="input-field">
-            </div>
-        </div>
-        <br>
-        <div class="gray-box borrowed-material">
-            <div class="form-row">
-                <input type="checkbox" id="borrowedMaterial" class="large-checkbox" onclick="toggleBorrowedFields()">
-                <label for="borrowedMaterial"><b id="borrowedMaterialLabel">Позајмен материјал</b></label>
-                <input type="checkbox" id="remainingMaterial" class="large-checkbox" style="margin-left: 20px;" onclick="toggleBorrowedFields()">
-                <label for="remainingMaterial"><b id="remainingMaterialLabel">Вишок материјал</b></label>
-            </div>
-            <div class="gray-box borrowed-material">
-                <div class="form-row">
-    <label for="borrowedKW"><b id="borrowedKWLabel">од KW</b></label>
-    <input type="number" id="borrowedKW" class="input-field borrowed-input toggle-field" placeholder="Внесете број на работна недела од која вршите заем" max="53" min="1" maxlength="2" oninput="validateKW(this)" disabled>
-</div>
-                <div class="form-row">
-    <label for="borrowedPA"><b id="borrowedPALabel">од PA</b></label>
-    <input type="number" id="borrowedPA" class="input-field borrowed-input toggle-field" placeholder="Внесете број на налог од кој вршите заем" min="0" oninput="validatePA(this)" disabled>
-</div>
+          </div>
 
-                <div class="form-row">
-                    <label for="notes"><b id="notesLabel">Забелешки/Коментари:</b></label>
-                    <textarea id="notes" class="input-field borrowed-input toggle-field" rows="7" cols="52" placeholder="Информации за позајмениот материјал" disabled></textarea>
-                </div>
-            </div>
-        </div>
-        <br>
-        <div class="form-row">
-            <label for="signature"><b id="signatureLabel">Внесете своерачен потпис:</b></label>
-        </div>
-        <div class="signature-container">
-            <canvas id="canvas" class="canvas"></canvas>
-            <input type="hidden" id="signatureData">
-            <button type="button" class="reset-button" onclick="resetSignature()">
-                <i class="fas fa-eraser"></i>
+          <!-- old class form-row -->
+          <div class="form-section">
+            <!-- old <b> tag new h4 tag -->
+            <h4 id="selectLocation">Одберете локација:</h4>
+
+            <input type="hidden" id="location" required />
+            <button
+              type="button"
+              class="location-button"
+              value="Magacin1"
+              onclick="selectLocation(this)"
+            >
+              Магацин1
             </button>
+            <button
+              type="button"
+              class="location-button"
+              value="Krojnica"
+              onclick="selectLocation(this)"
+            >
+              Кројница
+            </button>
+
+            <button
+              type="button"
+              class="location-button"
+              value="Pogon"
+              onclick="selectLocation(this)"
+            >
+              Погон
+            </button>
+
+            <button
+              type="button"
+              class="location-button"
+              value="Kontrola"
+              onclick="selectLocation(this)"
+            >
+              Контрола
+            </button>
+
+            <button
+              type="button"
+              class="location-button"
+              value="Magacin2"
+              onclick="selectLocation(this)"
+            >
+              Магацин2 краен влез
+            </button>
+          </div>
+
+          <div class="name-row">
+            <!-- OLD class form-row ==== new class -->
+            <div class="add-name">
+              <!-- old code <b> tag new code h4 -->
+              <!-- <b id="nameLabel">Име</b> -->
+              <h4 id="nameLabel">Име</h4>
+              <input
+                type="text"
+                id="firstName"
+                placeholder="Внесете име"
+                class="input-field name-input"
+                required
+              />
+            </div>
+            <!-- OLD class form-row ==== new class -->
+            <div class="add-surname">
+              <!-- old code <b> tag new code h4 -->
+              <!-- <b id="lastNameLabel">Презиме</b> -->
+              <h4 id="lastNameLabel">Презиме</h4>
+              <input
+                type="text"
+                id="lastName"
+                placeholder="Внесете презиме"
+                class="input-field last-name-input"
+                required
+              />
+            </div>
+          </div>
+          <div class="second-row">
+            <!-- old code b tag new code h4 tag -->
+            <label for="kw">
+              <!-- <b id="kwLabel">KW</b> -->
+              <h4 id="kwLabel">KW</h4>
+            </label>
+            <input
+              type="number"
+              id="kw"
+              placeholder="Внесете го бројот на работна недела"
+              required
+              class="input-field"
+              max="53"
+              min="1"
+              maxlength="2"
+              oninput="validateKW(this)"
+            />
+
+            <label for="pa">
+              <!-- old code b tag new code h4 tag -->
+              <!-- <b id="paLabel">PA</b> -->
+              <h4 id="paLabel">PA</h4>
+            </label>
+            <input
+              type="number"
+              id="pa"
+              placeholder="Внесете го бројот на налогот"
+              required
+              class="input-field"
+              min="0"
+              oninput="validatePA(this)"
+            />
+          </div>
+
+          <div class="pw-row">
+            <label for="password">
+              <!-- old code b tag new code h4 tag -->
+              <!-- <b id="passwordLabel">Лозинка</b> -->
+              <h4 id="passwordLabel">Лозинка</h4>
+            </label>
+            <div style="display: flex; align-items: center">
+              <input
+                type="password"
+                id="password"
+                oninput="checkPassword()"
+                placeholder="Внесете ја Вашата лозинка"
+                required
+                class="input-field-pw"
+              />
+            </div>
+          </div>
         </div>
-        <br>
-        <button id="submit-button" type="button" onclick="if(checkFields()) { confirmSave(); }" class="button-large" disabled><b id="saveButton">Зачувај Потпис</b></button>
-        <br><br>
-        <p style="font-size: 12px; text-align: left">
-            <b id="info" style="color: lightblue;">info:</b> <i>+389 78 395 246;</i>
-            <b id="mail" style="color: lightblue;"> mail:</b>signdoc.share@gmail.com <b id="mail" style="color: lightblue;">      © </b>2024
-        </p>
+
+        <!-- SECOND GRID  -->
+        <!-- izbrishano class gray-box -->
+        <div class="borrowed-material">
+          <!-- old code form-row class -->
+          <div class="second-form-row">
+            <input
+              type="checkbox"
+              id="borrowedMaterial"
+              class="large-checkbox"
+              onclick="toggleBorrowedFields()"
+            />
+            <label for="borrowedMaterial"
+              ><b id="borrowedMaterialLabel">Позајмен материјал</b></label
+            >
+            <input
+              type="checkbox"
+              id="remainingMaterial"
+              class="large-checkbox"
+              style="margin-left: 20px"
+              onclick="toggleBorrowedFields()"
+            />
+            <label for="remainingMaterial"
+              ><b id="remainingMaterialLabel">Вишок материјал</b></label
+            >
+          </div>
+          <!-- izbrishano borrowed material class -->
+          <div class="gray-box">
+            <!-- nova klasa styled-form-row izbrishano(form-row) -->
+            <div class="styled-form-row">
+              <label for="borrowedKW"><b id="borrowedKWLabel">од KW</b></label>
+              <input
+                type="number"
+                id="borrowedKW"
+                class="input-field borrowed-input toggle-field"
+                placeholder="Внесете број на работна недела од која вршите заем"
+                max="53"
+                min="1"
+                maxlength="2"
+                oninput="validateKW(this)"
+                disabled
+              />
+            </div>
+
+            <!-- nova klasa styled-form-row izbrishano(form-row) -->
+            <div class="styled-form-row">
+              <label for="borrowedPA"><b id="borrowedPALabel">од PA</b></label>
+              <input
+                type="number"
+                id="borrowedPA"
+                class="input-field borrowed-input toggle-field"
+                placeholder="Внесете број на налог од кој вршите заем"
+                min="0"
+                oninput="validatePA(this)"
+                disabled
+              />
+            </div>
+            <!-- nova klasa styled-form-row izbrishano(form-row) -->
+            <div class="styled-form-row">
+              <label for="notes">
+                <b id="notesLabel">Забелешки/Коментари:</b>
+              </label>
+              <textarea
+                id="notes"
+                class="input-field borrowed-input toggle-field"
+                rows="7"
+                cols="52"
+                placeholder="Информации за позајмениот материјал"
+                disabled
+              ></textarea>
+            </div>
+          </div>
+          <!--  stara klasa form-row nova klasa signature-form-rom -->
+        <div class="signature-form-row">
+          <label for="signature">
+            <b id="signatureLabel">Внесете своерачен потпис:</b>
+            </label>
+        </div>
+
+        <div class="signature-container">
+          <canvas id="canvas" class="canvas"></canvas>
+          <input type="hidden" id="signatureData" />
+          <button type="button" class="reset-button" onclick="resetSignature()">
+            <i class="fas fa-eraser"></i>
+          </button>
+        </div>
+        <br />
+        <button
+          id="submit-button"
+          type="button"
+          onclick="if(checkFields()) { confirmSave(); }"
+          class="button-large"
+          disabled
+        >
+          <b id="saveButton">Зачувај Потпис</b>
+        </button>
+
+        <br /><br />
+        <!-- FOOTER CODE -->
+        <div class="info-footer">
+          <p id="info">Info: <span>+389 78 395 246;</span></p>
+          <p id="mail">E-mail: <span>signdoc.share@gmail.com</span></p>
+          <p id="mail">©2024</p>
+        </div>
+        <!-- <p style="font-size: 12px; text-align: left">
+          <b id="info" style="color: lightblue">info:</b>
+          <i>+389 78 395 246;</i>
+          <b id="mail" style="color: lightblue"> mail:</b
+          >signdoc.share@gmail.com
+          <b id="mail" style="color: lightblue"> © </b>2024
+        </p> -->
         <div id="messagecanvas" class="message"></div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
-    </form>
+      </form>
+    </div>
+  
+
+
     <script>
-        // Fullscreen functionality
-         function openFullscreen() {
+      // Fullscreen functionality
+      function openFullscreen() {
         if (document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen();
+          document.documentElement.requestFullscreen();
         } else if (document.documentElement.mozRequestFullScreen) {
-            document.documentElement.mozRequestFullScreen();
+          document.documentElement.mozRequestFullScreen();
         } else if (document.documentElement.webkitRequestFullscreen) {
-            document.documentElement.webkitRequestFullscreen();
+          document.documentElement.webkitRequestFullscreen();
         } else if (document.documentElement.msRequestFullscreen) {
-            document.documentElement.msRequestFullscreen();
+          document.documentElement.msRequestFullscreen();
         } else {
-            alert("Fullscreen mode is not supported on this device.");
+          alert("Fullscreen mode is not supported on this device.");
         }
-    }
+      }
 
-    document.getElementById('fullscreenButton').addEventListener('click', openFullscreen);
+      document
+        .getElementById("fullscreenButton")
+        .addEventListener("click", openFullscreen);
 
-    // Logout functionality
-    document.getElementById('logoutButton').addEventListener('click', function() {
-        window.location.href = 'http://192.168.0.102:8082/Home1.html';
-    });
+      // Logout functionality
+      document
+        .getElementById("logoutButton")
+        .addEventListener("click", function () {
+          window.location.href = "http://192.168.0.102:8082/Home1.html";
+        });
 
-        document.getElementById('fullscreenButton').addEventListener('click', openFullscreen);
+      document
+        .getElementById("fullscreenButton")
+        .addEventListener("click", openFullscreen);
 
-        // Initialize the canvas for signature
-        function initSignatureCanvas() {
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    let drawing = false;
-    let lastPos = { x: 0, y: 0 };
+      // Initialize the canvas for signature
+      function initSignatureCanvas() {
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        let drawing = false;
+        let lastPos = { x: 0, y: 0 };
 
-    // Поставете ја бојата на потписот во мастило боја (темно сина)
-    ctx.strokeStyle = '#1E3A8A'; // Мастило боја (можете да ја прилагодите според вашите потреби)
+        // Поставете ја бојата на потписот во мастило боја (темно сина)
+        ctx.strokeStyle = "#1E3A8A"; // Мастило боја (можете да ја прилагодите според вашите потреби)
 
-    function getMousePos(e) {
-        const rect = canvas.getBoundingClientRect();
-        return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-    }
-
-    function getTouchPos(e) {
-        const rect = canvas.getBoundingClientRect();
-        return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
-    }
-
-    canvas.addEventListener('mousedown', (e) => {
-        drawing = true;
-        lastPos = getMousePos(e);
-        ctx.beginPath();
-        ctx.moveTo(lastPos.x, lastPos.y);
-    });
-
-    canvas.addEventListener('mousemove', (e) => {
-        if (!drawing) return;
-        const pos = getMousePos(e);
-        ctx.lineTo(pos.x, pos.y);
-        ctx.stroke();
-        lastPos = pos;
-    });
-
-    canvas.addEventListener('mouseup', () => drawing = false);
-    canvas.addEventListener('mouseout', () => drawing = false);
-
-    canvas.addEventListener('touchstart', (e) => {
-        drawing = true;
-        lastPos = getTouchPos(e);
-        ctx.beginPath();
-        ctx.moveTo(lastPos.x, lastPos.y);
-    });
-
-    canvas.addEventListener('touchmove', (e) => {
-        if (!drawing) return;
-        const pos = getTouchPos(e);
-        ctx.lineTo(pos.x, pos.y);
-        ctx.stroke();
-        lastPos = pos;
-    });
-
-    canvas.addEventListener('touchend', () => drawing = false);
-    canvas.addEventListener('touchcancel', () => drawing = false);
-}
-
-
-        // Call the initialization function
-        initSignatureCanvas();
-
-        function selectLocation(button) {
-            document.querySelectorAll('.location-button').forEach(btn => btn.classList.remove('selected'));
-            button.classList.add('selected');
-            document.getElementById('location').value = button.value;
+        function getMousePos(e) {
+          const rect = canvas.getBoundingClientRect();
+          return { x: e.clientX - rect.left, y: e.clientY - rect.top };
         }
 
-function generatePDF(data) {
-    const doc = new jsPDF();
+        function getTouchPos(e) {
+          const rect = canvas.getBoundingClientRect();
+          return {
+            x: e.touches[0].clientX - rect.left,
+            y: e.touches[0].clientY - rect.top,
+          };
+        }
 
-    // Добиј го тековниот датум и време
-    const now = new Date();
-    const date = now.toLocaleDateString(); // Форматирање на датум
-    const time = now.toLocaleTimeString(); // Форматирање на време
+        canvas.addEventListener("mousedown", (e) => {
+          drawing = true;
+          lastPos = getMousePos(e);
+          ctx.beginPath();
+          ctx.moveTo(lastPos.x, lastPos.y);
+        });
 
-    // Додади датум и време во PDF-от
-    doc.setFontSize(10);
-    doc.text(`Datum: ${date}`, 10, 10);
-    doc.text(`Vreme: ${time}`, 150, 10); // Позиционирано десно
+        canvas.addEventListener("mousemove", (e) => {
+          if (!drawing) return;
+          const pos = getMousePos(e);
+          ctx.lineTo(pos.x, pos.y);
+          ctx.stroke();
+          lastPos = pos;
+        });
 
-    // Додади наслов во PDF-от
-    doc.setFontSize(20);
-    doc.setTextColor(173, 216, 230); // lightblue color
-    doc.text('SignDoc', 10, 30);
-    doc.setTextColor(169, 169, 169); // darkgray color
-    doc.text('Share', 55, 30);
-    doc.setFontSize(28);
-    doc.text('e-signed', 90, 30);
+        canvas.addEventListener("mouseup", () => (drawing = false));
+        canvas.addEventListener("mouseout", () => (drawing = false));
 
-    // Додади тип на документ
-    doc.setFontSize(16);
-    doc.setTextColor(0, 0, 0); // reset color to black
-    doc.text(`TIP NA DOKUMENT: ${data.documentType}`, 10, 50);
+        canvas.addEventListener("touchstart", (e) => {
+          drawing = true;
+          lastPos = getTouchPos(e);
+          ctx.beginPath();
+          ctx.moveTo(lastPos.x, lastPos.y);
+        });
 
-    // Додади основен текст во PDF-от
-    doc.setFontSize(14);
-    doc.text(`IME: ${data.firstName}`, 10, 60);
-    doc.text(`PREZIME: ${data.lastName}`, 10, 70);
-    doc.text(`LOKACIJA: ${data.location}`, 10, 80);
-    doc.text(`KW: ${data.kw}`, 10, 90);
-    doc.text(`PA: ${data.pa}`, 10, 100);
+        canvas.addEventListener("touchmove", (e) => {
+          if (!drawing) return;
+          const pos = getTouchPos(e);
+          ctx.lineTo(pos.x, pos.y);
+          ctx.stroke();
+          lastPos = pos;
+        });
 
-    // Додади информации за позајмен или вишок материјал ако постојат
-    let yPos = 110;
-    if (data.borrowedMaterial || data.remainingMaterial) {
-        doc.text(`POZAJMEN MATERIJAL: ${data.borrowedMaterial ? 'DA' : 'NE'}`, 10, yPos);
-        yPos += 10;
-        doc.text(`VISOK MATERIJAL: ${data.remainingMaterial ? 'DA' : 'NE'}`, 10, yPos);
-        yPos += 10;
+        canvas.addEventListener("touchend", () => (drawing = false));
+        canvas.addEventListener("touchcancel", () => (drawing = false));
+      }
 
-        if (data.borrowedMaterial) {
+      // Call the initialization function
+      initSignatureCanvas();
+
+      function selectLocation(button) {
+        document
+          .querySelectorAll(".location-button")
+          .forEach((btn) => btn.classList.remove("selected"));
+        button.classList.add("selected");
+        document.getElementById("location").value = button.value;
+      }
+
+      function generatePDF(data) {
+        const doc = new jsPDF();
+
+        // Добиј го тековниот датум и време
+        const now = new Date();
+        const date = now.toLocaleDateString(); // Форматирање на датум
+        const time = now.toLocaleTimeString(); // Форматирање на време
+
+        // Додади датум и време во PDF-от
+        doc.setFontSize(10);
+        doc.text(`Datum: ${date}`, 10, 10);
+        doc.text(`Vreme: ${time}`, 150, 10); // Позиционирано десно
+
+        // Додади наслов во PDF-от
+        doc.setFontSize(20);
+        doc.setTextColor(173, 216, 230); // lightblue color
+        doc.text("SignDoc", 10, 30);
+        doc.setTextColor(169, 169, 169); // darkgray color
+        doc.text("Share", 55, 30);
+        doc.setFontSize(28);
+        doc.text("e-signed", 90, 30);
+
+        // Додади тип на документ
+        doc.setFontSize(16);
+        doc.setTextColor(0, 0, 0); // reset color to black
+        doc.text(`TIP NA DOKUMENT: ${data.documentType}`, 10, 50);
+
+        // Додади основен текст во PDF-от
+        doc.setFontSize(14);
+        doc.text(`IME: ${data.firstName}`, 10, 60);
+        doc.text(`PREZIME: ${data.lastName}`, 10, 70);
+        doc.text(`LOKACIJA: ${data.location}`, 10, 80);
+        doc.text(`KW: ${data.kw}`, 10, 90);
+        doc.text(`PA: ${data.pa}`, 10, 100);
+
+        // Додади информации за позајмен или вишок материјал ако постојат
+        let yPos = 110;
+        if (data.borrowedMaterial || data.remainingMaterial) {
+          doc.text(
+            `POZAJMEN MATERIJAL: ${data.borrowedMaterial ? "DA" : "NE"}`,
+            10,
+            yPos
+          );
+          yPos += 10;
+          doc.text(
+            `VISOK MATERIJAL: ${data.remainingMaterial ? "DA" : "NE"}`,
+            10,
+            yPos
+          );
+          yPos += 10;
+
+          if (data.borrowedMaterial) {
             doc.text(`od KW: ${data.borrowedKW}`, 10, yPos);
             yPos += 10;
             doc.text(`od PA: ${data.borrowedPA}`, 10, yPos);
             yPos += 10;
             doc.text(`Komentari/Zabeleshki: ${data.notes}`, 10, yPos);
             yPos += 20; // Додај повеќе простор пред потписот
-        }
-    }
-
-    // Додади го името над потписот
-    const signatureX = 105; // Центрирана X позиција
-    const nameY = 240; // Y позиција за името
-    const signatureY = nameY + 10; // Y позиција за потписот веднаш под името
-
-    doc.text(`${data.firstName} ${data.lastName}`, signatureX + 30, nameY, { align: 'center' });
-
-    // Додади го потписот (image) во PDF-от
-    const canvas = document.getElementById('canvas');
-    const signatureImage = canvas.toDataURL('image/png');
-    doc.addImage(signatureImage, 'PNG', signatureX, signatureY, 60, 30); 
-
-    // Генерирај име за PDF-от врз основа на условите
-    let fileName = `${data.pa}_${data.location}_${data.kw}.pdf`;
-
-    if (data.remainingMaterial) {
-        fileName = `+${data.pa}_${data.location}_${data.kw}.pdf`;
-    } else if (data.borrowedMaterial) {
-        fileName = `-${data.pa}_${data.location}_${data.kw}.pdf`;
-    }
-
-    // Симни го PDF-от со генерираното име
-    doc.save(fileName);
-}
-
-
-
-
-
-
-
-
-        function toggleDocumentType() {
-            const isIspratnica = document.getElementById('ispratnicaCheckbox').checked;
-            const isPriemnica = document.getElementById('priemnicaCheckbox').checked;
-
-            if (isIspratnica || isPriemnica) {
-                document.getElementById('submit-button').disabled = false;
-            } else {
-                document.getElementById('submit-button').disabled = true;
-            }
+          }
         }
 
-        function toggleBorrowedFields() {
-            const borrowedMaterial = document.getElementById('borrowedMaterial').checked;
-            const remainingMaterial = document.getElementById('remainingMaterial').checked;
-            const fields = document.querySelectorAll('.toggle-field');
-            const grayBox = document.querySelector('.gray-box');
+        // Додади го името над потписот
+        const signatureX = 105; // Центрирана X позиција
+        const nameY = 240; // Y позиција за името
+        const signatureY = nameY + 10; // Y позиција за потписот веднаш под името
 
-            fields.forEach(field => {
-                field.disabled = !(borrowedMaterial || remainingMaterial);
-            });
+        doc.text(`${data.firstName} ${data.lastName}`, signatureX + 30, nameY, {
+          align: "center",
+        });
 
-            if (borrowedMaterial || remainingMaterial) {
-                grayBox.style.backgroundColor = 'lightblue';
-            } else {
-                grayBox.style.backgroundColor = 'lightgray';
-            }
+        // Додади го потписот (image) во PDF-от
+        const canvas = document.getElementById("canvas");
+        const signatureImage = canvas.toDataURL("image/png");
+        doc.addImage(signatureImage, "PNG", signatureX, signatureY, 60, 30);
+
+        // Генерирај име за PDF-от врз основа на условите
+        let fileName = `${data.pa}_${data.location}_${data.kw}.pdf`;
+
+        if (data.remainingMaterial) {
+          fileName = `+${data.pa}_${data.location}_${data.kw}.pdf`;
+        } else if (data.borrowedMaterial) {
+          fileName = `-${data.pa}_${data.location}_${data.kw}.pdf`;
         }
 
-        function checkFields() {
-            const pa = document.getElementById('pa').value;
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-            const kw = document.getElementById('kw').value;
-            const location = document.getElementById('location').value;
-            const password = document.getElementById('password').value;
-            const borrowedMaterial = document.getElementById('borrowedMaterial').checked;
-            const borrowedKW = document.getElementById('borrowedKW').value;
-            const borrowedPA = document.getElementById('borrowedPA').value;
-            const notes = document.getElementById('notes').value;
-            const isIspratnica = document.getElementById('ispratnicaCheckbox').checked;
-            const isPriemnica = document.getElementById('priemnicaCheckbox').checked;
+        // Симни го PDF-от со генерираното име
+        doc.save(fileName);
+      }
 
-            if (!isIspratnica && !isPriemnica) {
-                alert('Мора да изберете ИСПРАТНИЦА или ПРИЕМНИЦА за да може да се зачува потписот.');
-                return false;
-            }
+      function toggleDocumentType() {
+        const isIspratnica =
+          document.getElementById("ispratnicaCheckbox").checked;
+        const isPriemnica =
+          document.getElementById("priemnicaCheckbox").checked;
 
-            if (firstName === '' || lastName === '' || kw === '' || pa === '' || location === '' || password === '') {
-                alert('Ве молиме пополнете ги сите задолжителни полиња пред да зачувате потписот.');
-                return false;
-            }
-
-            if (borrowedMaterial && (borrowedKW === '' || borrowedPA === '' || notes === '')) {
-                alert('Ве молиме пополнете ги сите задолжителни полиња за позајмен материјал.');
-                return false;
-            }
-
-            return true;
-        }
-
-        function resetForm() {
-            document.getElementById("myForm").reset();
-            document.querySelectorAll('.location-button').forEach(btn => btn.classList.remove('selected'));
-            document.getElementById('location').value = '';
-            resetSignature();
-            toggleBorrowedFields();
-        }
-
-        function resetSignature() {
-            const canvas = document.getElementById('canvas');
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-
-        function confirmSave() {
-    if (!checkFields()) return;
-
-    const data = {
-        id: new Date().getTime(),
-        location: document.getElementById('location').value,
-        firstName: document.getElementById('firstName').value,
-        lastName: document.getElementById('lastName').value,
-        kw: document.getElementById('kw').value,
-        pa: document.getElementById('pa').value,
-        notes: document.getElementById('notes').value,
-        password: document.getElementById('password').value,
-        signature: document.getElementById('signatureData').value,
-        borrowedMaterial: document.getElementById('borrowedMaterial').checked,
-        borrowedKW: document.getElementById('borrowedKW').value,
-        borrowedPA: document.getElementById('borrowedPA').value,
-        remainingMaterial: document.getElementById('remainingMaterial').checked,
-        documentType: document.getElementById('ispratnicaCheckbox').checked ? 'ISPRATNICA' : 'PRIEMNICA'
-    };
-
-    fetch('/save', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(result => {
-        if (result.success) {
-            alert('Податоците се успешно зачувани!');
-            generatePDF(data); // Генерирај и симни PDF
-            resetForm();
+        if (isIspratnica || isPriemnica) {
+          document.getElementById("submit-button").disabled = false;
         } else {
-            alert('Грешка при зачувување на податоците.');
+          document.getElementById("submit-button").disabled = true;
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Грешка при зачувување на податоците.');
-    });
-}
-function validateKW(input) {
-    if (input.value.length > 2) {
-        input.value = input.value.slice(0, 2); // Ограничете на две цифри
-    }
-    if (input.value > 53) {
-        input.value = 53; // Поставете го на максимална вредност 53
-    }
-    if (input.value < 1) {
-        input.value = 1; // Поставете го на минимална вредност 1
-    }
-}
+      }
 
-function validatePA(input) {
-    if (input.value < 0) {
-        input.value = ''; // Ако вредноста е негативна, избришете ја
-    }
-}
+      function toggleBorrowedFields() {
+        const borrowedMaterial =
+          document.getElementById("borrowedMaterial").checked;
+        const remainingMaterial =
+          document.getElementById("remainingMaterial").checked;
+        const fields = document.querySelectorAll(".toggle-field");
+        const grayBox = document.querySelector(".gray-box");
 
+        fields.forEach((field) => {
+          field.disabled = !(borrowedMaterial || remainingMaterial);
+        });
 
+        if (borrowedMaterial || remainingMaterial) {
+          grayBox.style.backgroundColor = "lightblue";
+        } else {
+          grayBox.style.backgroundColor = "lightgray";
+        }
+      }
 
+      function checkFields() {
+        const pa = document.getElementById("pa").value;
+        const firstName = document.getElementById("firstName").value;
+        const lastName = document.getElementById("lastName").value;
+        const kw = document.getElementById("kw").value;
+        const location = document.getElementById("location").value;
+        const password = document.getElementById("password").value;
+        const borrowedMaterial =
+          document.getElementById("borrowedMaterial").checked;
+        const borrowedKW = document.getElementById("borrowedKW").value;
+        const borrowedPA = document.getElementById("borrowedPA").value;
+        const notes = document.getElementById("notes").value;
+        const isIspratnica =
+          document.getElementById("ispratnicaCheckbox").checked;
+        const isPriemnica =
+          document.getElementById("priemnicaCheckbox").checked;
+
+        if (!isIspratnica && !isPriemnica) {
+          alert(
+            "Мора да изберете ИСПРАТНИЦА или ПРИЕМНИЦА за да може да се зачува потписот."
+          );
+          return false;
+        }
+
+        if (
+          firstName === "" ||
+          lastName === "" ||
+          kw === "" ||
+          pa === "" ||
+          location === "" ||
+          password === ""
+        ) {
+          alert(
+            "Ве молиме пополнете ги сите задолжителни полиња пред да зачувате потписот."
+          );
+          return false;
+        }
+
+        if (
+          borrowedMaterial &&
+          (borrowedKW === "" || borrowedPA === "" || notes === "")
+        ) {
+          alert(
+            "Ве молиме пополнете ги сите задолжителни полиња за позајмен материјал."
+          );
+          return false;
+        }
+
+        return true;
+      }
+
+      function resetForm() {
+        document.getElementById("myForm").reset();
+        document
+          .querySelectorAll(".location-button")
+          .forEach((btn) => btn.classList.remove("selected"));
+        document.getElementById("location").value = "";
+        resetSignature();
+        toggleBorrowedFields();
+      }
+
+      function resetSignature() {
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+
+      function confirmSave() {
+        if (!checkFields()) return;
+
+        const data = {
+          id: new Date().getTime(),
+          location: document.getElementById("location").value,
+          firstName: document.getElementById("firstName").value,
+          lastName: document.getElementById("lastName").value,
+          kw: document.getElementById("kw").value,
+          pa: document.getElementById("pa").value,
+          notes: document.getElementById("notes").value,
+          password: document.getElementById("password").value,
+          signature: document.getElementById("signatureData").value,
+          borrowedMaterial: document.getElementById("borrowedMaterial").checked,
+          borrowedKW: document.getElementById("borrowedKW").value,
+          borrowedPA: document.getElementById("borrowedPA").value,
+          remainingMaterial:
+            document.getElementById("remainingMaterial").checked,
+          documentType: document.getElementById("ispratnicaCheckbox").checked
+            ? "ISPRATNICA"
+            : "PRIEMNICA",
+        };
+
+        fetch("/save", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+          .then((response) => response.json())
+          .then((result) => {
+            if (result.success) {
+              alert("Податоците се успешно зачувани!");
+              generatePDF(data); // Генерирај и симни PDF
+              resetForm();
+            } else {
+              alert("Грешка при зачувување на податоците.");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Грешка при зачувување на податоците.");
+          });
+      }
+      function validateKW(input) {
+        if (input.value.length > 2) {
+          input.value = input.value.slice(0, 2); // Ограничете на две цифри
+        }
+        if (input.value > 53) {
+          input.value = 53; // Поставете го на максимална вредност 53
+        }
+        if (input.value < 1) {
+          input.value = 1; // Поставете го на минимална вредност 1
+        }
+      }
+
+      function validatePA(input) {
+        if (input.value < 0) {
+          input.value = ""; // Ако вредноста е негативна, избришете ја
+        }
+      }
     </script>
-</body>
+  </body>
 </html>
