@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html lang="mk">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SignDoc Warehouse</title>
-<style>
-.button-container {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 50px; /* Adjust the gap as needed */
-}
-.logout-button {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SignDoc Warehouse</title>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        box-sizing: border-box;
+        margin: 0 auto;
+        padding: 0 auto;
+        /* background: linear-gradient(to right, white, lightblue); */
+      }
+      /* .button-container {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 50px; 
+      } */
+      /* .logout-button {
     background-color: white;
     border: 2px solid gray;
     color: red;
@@ -20,420 +27,558 @@
     cursor: pointer;
     border-radius: 5px;
     transition: background-color 0.3s, color 0.3s;
-    margin-right: 100px; /* Space between buttons */
+    margin-right: 100px;
 }
 .logout-button:hover {
     background-color: lightgray;
     color: darkred;
-}
-.pagination button {
-    background-color: lightgray;
-    border: 2px solid lightblue;
-    color: black;
-    padding: 10px 20px;
-    font-size: 15px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin: 0 5px;
-}
-.pagination button:hover {
-    background-color: darkgray;
-}
-.pagination button:disabled {
-    background-color: gray;
-    cursor: not-allowed;
-}
-.back-button {
-    background-color: white;
-    border: 2px solid lightblue;
-    color: lightblue;
-    padding: 10px 20px;
-    font-size: 15px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s, color 0.3s;
-    width: 150px; /* Fixed width */
-    height: 50px; /* Fixed height */
-}
-.back-button:hover {
-    background-color: lightblue;
-    color: white;
-}
-.search-input {
-    width: 200px; /* Smaller width */
-    padding: 5px; /* Smaller padding */
-    margin-bottom: 20px;
-}
-.search-button {
-    background-color: lightblue;
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    font-size: 15px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-left: 10px;
-}
-.search-button:hover {
-    background-color: darkblue;
-}
-.download-button {
-    background-color: lightgreen;
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    font-size: 15px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-left: 10px;
-}
-.download-button:hover {
-    background-color: darkgreen;
-}
+} */
+      .logout-button {
+        width: 175px;
+        height: 50px;
+        background-color: red;
+        color: #fefefe;
+        font-size: 17px;
+        border: none;
+        border-radius: 5px;
+        font-weight: 600;
+        margin: 10px;
+        cursor: pointer;
+        margin: 10px;
+      }
+      .logout-button:hover {
+        background: linear-gradient(to bottom, red, #eeedeb);
+        color: #fff;
+        cursor: pointer;
+      }
+      .pagination {
+        display: flex !important;
+        justify-content: space-between;
+        margin-top: 20px !important;
+      }
+      .pagination button {
+        background-color: lightgray;
+        border: 2px solid lightblue;
+        color: black;
+        padding: 10px 20px;
+        font-size: 15px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+      .pagination button:hover {
+        background-color: darkgray;
+      }
+      .pagination button:disabled {
+        background-color: gray;
+        cursor: not-allowed;
+      }
+      .back-button {
+        background-color: white;
+        border: 1.4px solid lightblue;
+        color: lightblue;
+        padding: 10px 20px;
+        margin: 10px;
+        font-size: 18px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s, color 0.3s;
+        width: 150px; /* Fixed width */
+        height: 50px; /* Fixed height */
+        font-weight: 600;
+      }
+      .back-button:hover {
+        background-color: lightblue;
+        color: white;
+      }
+      .search-input {
+        width: 200px; /* Smaller width */
+        padding: 8px; /* Smaller padding */
+        border: 1px solid lightblue;
+        font-size: 17px;
+        font-weight: 600;
+      }
+      .search-button {
+        background-color: lightblue;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        font-size: 15px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-left: 10px;
+      }
+      .search-button:hover {
+        background-color: darkblue;
+      }
+      .download-button {
+        background-color: lightgreen;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        font-size: 15px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-left: 10px;
+      }
+      .download-button:hover {
+        background-color: darkgreen;
+      }
 
+      .edit-button,
+      .save-button {
+        background-color: orange;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        font-size: 15px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-left: 10px;
+      }
+      .edit-button:hover,
+      .save-button:hover {
+        background-color: darkorange;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid black;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+      }
+      th {
+        background-color: lightblue;
+      }
+      #loadingMessage {
+        font-size: 20px;
+        color: gray;
+        text-align: center;
+        margin-top: 20px;
+      }
+      .pagination button {
+        background-color: lightgray;
+        border: 2px solid lightblue;
+        color: black;
+        padding: 10px 20px;
+        font-size: 15px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin: 0 5px;
+      }
+      .pagination button:hover {
+        background-color: darkgray;
+      }
+      .pagination button:disabled {
+        background-color: gray;
+        cursor: not-allowed;
+      }
+      /* Modal styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.4);
+        padding-top: 60px;
+      }
+      .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 300px;
+        text-align: center;
+      }
+      .password-input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        box-sizing: border-box;
+      }
+      .modal button {
+        background-color: lightgray;
+        border: 2px solid lightblue;
+        color: black;
+        padding: 10px 20px;
+        font-size: 15px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin: 5px;
+      }
+      .modal button:hover {
+        background-color: darkgray;
+      }
+      .valid-check {
+        display: none;
+        color: green;
+        font-size: 20px;
+        margin-left: 10px;
+      }
+      .add-button {
+        background-color: lightgreen;
+        border: 2px solid green;
+        color: black;
+        padding: 10px 20px;
+        font-size: 15px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin: 10px 0;
+      }
+      .add-button:hover {
+        background-color: darkgreen;
+        color: white;
+      }
+      .exit-button {
+        background-color: red;
+        border: 2px solid darkred;
+        color: white;
+        padding: 10px 20px;
+        font-size: 15px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin: 10px 0;
+      }
+      .exit-button:hover {
+        background-color: darkred;
+      }
+      .button-container {
+        display: flex;
+        justify-content: space-between;
+        background: linear-gradient(to top, lightblue, white);
+        width: 100%;
+      }
+      .upload-button {
+        display: none;
+      }
+      #uploadButton {
+        background-color: gray; /* Сива позадина */
+        color: white; /* Бели букви */
+        border: 2px solid lightblue; /* Светло сина рамка */
+        padding: 10px 20px; /* Простор околу текстот */
+        border-radius: 5px; /* Заоблени агли */
+        cursor: pointer; /* Покажувачот на глувчето ќе биде како рака */
+      }
+      #uploadButton:hover {
+        background-color: darkgray; /* Потемна сива позадина при hover */
+      }
+      .upload-button:hover {
+        background-color: darkblue;
+        color: white;
+      }
+      #cancelButton {
+        display: inline-block; /* Променете го од none на inline-block */
+        background-color: red; /* Боја на позадина */
+        border: 2px solid darkred; /* Боја на рамка */
+        color: white; /* Боја на текст */
+        padding: 10px 20px; /* Простор околу текстот */
+        font-size: 15px; /* Големина на текст */
+        cursor: pointer; /* Покажувачот на глувчето ќе биде како рака */
+        border-radius: 5px; /* Заоблени агли */
+        margin-left: 10px; /* Простор помеѓу копчињата */
+      }
+      #uploadingText {
+        display: none;
+        color: red;
+        font-weight: bold;
+        animation: blink 1s infinite;
+      }
+      @keyframes blink {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
 
+      .partner-text {
+        color: gray !important;
+        letter-spacing: 1px;
+        text-align: center;
+        font-size: 23px;
+        border-bottom: 1px solid lightblue;
+        font-weight: 600;
+      }
 
-.edit-button, .save-button {
-    background-color: orange;
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    font-size: 15px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-left: 10px;
-}
-.edit-button:hover, .save-button:hover {
-    background-color: darkorange;
-}
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-table, th, td {
-    border: 1px solid black;
-}
-th, td {
-    padding: 10px;
-    text-align: left;
-}
-th {
-    background-color: lightblue;
-}
-#loadingMessage {
-    font-size: 20px;
-    color: gray;
-    text-align: center;
-    margin-top: 20px;
-}
-.pagination button {
-    background-color: lightgray;
-    border: 2px solid lightblue;
-    color: black;
-    padding: 10px 20px;
-    font-size: 15px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin: 0 5px;
-}
-.pagination button:hover {
-    background-color: darkgray;
-}
-.pagination button:disabled {
-    background-color: gray;
-    cursor: not-allowed;
-}
-/* Modal styles */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
-    padding-top: 60px;
-}
-.modal-content {
-    background-color: #fefefe;
-    margin: 5% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 300px;
-    text-align: center;
-}
-.password-input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    box-sizing: border-box;
-}
-.modal button {
-    background-color: lightgray;
-    border: 2px solid lightblue;
-    color: black;
-    padding: 10px 20px;
-    font-size: 15px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin: 5px;
-}
-.modal button:hover {
-    background-color: darkgray;
-}
-.valid-check {
-    display: none;
-    color: green;
-    font-size: 20px;
-    margin-left: 10px;
-}
-.add-button {
-    background-color: lightgreen;
-    border: 2px solid green;
-    color: black;
-    padding: 10px 20px;
-    font-size: 15px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin: 10px 0;
-}
-.add-button:hover {
-    background-color: darkgreen;
-    color: white;
-}
-.exit-button {
-    background-color: red;
-    border: 2px solid darkred;
-    color: white;
-    padding: 10px 20px;
-    font-size: 15px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin: 10px 0;
-}
-.exit-button:hover {
-    background-color: darkred;
-}
-.button-container {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 10px; /* Adjust the gap as needed */
-}
-.upload-button {
-    display: none;
-}
-#uploadButton {
-    background-color: gray; /* Сива позадина */
-    color: white; /* Бели букви */
-    border: 2px solid lightblue; /* Светло сина рамка */
-    padding: 10px 20px; /* Простор околу текстот */
-    border-radius: 5px; /* Заоблени агли */
-    cursor: pointer; /* Покажувачот на глувчето ќе биде како рака */
-}
-#uploadButton:hover {
-    background-color: darkgray; /* Потемна сива позадина при hover */
-}
-.upload-button:hover {
-    background-color: darkblue;
-    color: white;
-}
-#cancelButton {
-    display: inline-block; /* Променете го од none на inline-block */
-    background-color: red; /* Боја на позадина */
-    border: 2px solid darkred; /* Боја на рамка */
-    color: white; /* Боја на текст */
-    padding: 10px 20px; /* Простор околу текстот */
-    font-size: 15px; /* Големина на текст */
-    cursor: pointer; /* Покажувачот на глувчето ќе биде како рака */
-    border-radius: 5px; /* Заоблени агли */
-    margin-left: 10px; /* Простор помеѓу копчињата */
-}
-#uploadingText {
-    display: none;
-    color: red;
-    font-weight: bold;
-    animation: blink 1s infinite;
-}
-@keyframes blink {
-    0% { opacity: 1; }
-    50% { opacity: 0; }
-    100% { opacity: 1; }
-}
-</style>
-</head>
-<body>
+      .heading-text h1 {
+        font-size: 65px;
+        color: lightblue;
+        text-align: center;
+        margin-top: 70px !important;
+      }
+      .heading-text span {
+        color: gray;
+      }
+      .button-container2 {
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        width: 100%;
+        margin-top: 70px !important;
+      }
+    </style>
+  </head>
+  <body>
     <div class="button-container">
-        <button type="button" onclick="goToHome()" class="logout-button">Log Out</button>
-        <button type="button" onclick="goBack()" class="back-button">Back</button>
+      <button type="button" onclick="goToHome()" class="logout-button">
+        Log Out
+      </button>
+      <div class="partner-text">
+        <p id="partnerText">
+          Your trusted partner for e-documents and e-signatures.
+        </p>
+      </div>
+      <button type="button" onclick="goBack()" class="back-button">Back</button>
     </div>
-    <br><br>
-    <p id="partnerText" style="font-size: 15px; color: lightgray; text-align: left;"><b>Your trusted partner for e-documents and e-signatures.</b></p>
-    <h1 id="title" style="font-size: 54px; text-align: left;">
-        <span style="color: lightblue;">SignDoc</span>
-        <span style="color: darkgray;">Warehouse</span>
-        <span style="font-size: 12px;">™</span>
-    </h1>
-    <div class="button-container">
-        <input type="text" id="searchInput" placeholder="Search..." class="search-input" onkeyup="filterData()">
-        <button type="button" onclick="filterData()" class="search-button">Search</button>
-        <button type="button" onclick="downloadData()" class="download-button">Download</button>
-        <button type="button" onclick="editData()" class="edit-button">Edit</button>
-        <button type="button" onclick="saveData()" class="save-button" style="display:none;">Save Data</button>
-        <button id="addRowButton" class="add-button" style="display:none;" onclick="addRow()">+ Add Row</button>
-        <button id="uploadButton" class="upload-button" style="display:none;" onclick="showUploadModal()">Upload</button>
-        <button id="cancelButton" style="display: none;">Cancel</button>
-        <span id="uploadingText">Uploading...</span>
+
+    <!-- <h1 id="title" style="font-size: 54px; text-align: left">
+      <span style="color: lightblue">SignDoc</span>
+      <span style="color: darkgray">Warehouse</span>
+      <span style="font-size: 12px">™</span>
+    </h1> -->
+    <!-- NOV KOD  -->
+    <div class="heading-text">
+      <h1 id="title">SignDoc <span>Warehouse ™</span></h1>
     </div>
+
+    <div class="button-container2">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search..."
+        class="search-input"
+        onkeyup="filterData()"
+      />
+      <button type="button" onclick="filterData()" class="search-button">
+        Search
+      </button>
+      <button type="button" onclick="downloadData()" class="download-button">
+        Download
+      </button>
+      <button type="button" onclick="editData()" class="edit-button">
+        Edit
+      </button>
+      <button
+        type="button"
+        onclick="saveData()"
+        class="save-button"
+        style="display: none"
+      >
+        Save Data
+      </button>
+      <button
+        id="addRowButton"
+        class="add-button"
+        style="display: none"
+        onclick="addRow()"
+      >
+        + Add Row
+      </button>
+      <button
+        id="uploadButton"
+        class="upload-button"
+        style="display: none"
+        onclick="showUploadModal()"
+      >
+        Upload
+      </button>
+      <button id="cancelButton" style="display: none">Cancel</button>
+      <span id="uploadingText">Uploading...</span>
+    </div>
+
     <div id="uploadPasswordModal" class="modal">
-        <div class="modal-content">
-            <h2>Enter Password</h2>
-            <form id="uploadLoginForm" onsubmit="return checkUploadPassword(event)">
-                <label for="uploadPassword"></label>
-                <input type="password" id="uploadPasswordInput" name="password" class="password-input" required>
-                <span id="uploadMessage"></span>
-                <br><br>
-                <button type="submit" class="back-button">Enter</button>
-                <button type="button" onclick="closeUploadModal()" class="back-button">Cancel</button>
-            </form>
-        </div>
+      <div class="modal-content">
+        <h2>Enter Password</h2>
+        <form id="uploadLoginForm" onsubmit="return checkUploadPassword(event)">
+          <label for="uploadPassword"></label>
+          <input
+            type="password"
+            id="uploadPasswordInput"
+            name="password"
+            class="password-input"
+            required
+          />
+          <span id="uploadMessage"></span>
+          <br /><br />
+          <button type="submit" class="back-button">Enter</button>
+          <button
+            type="button"
+            onclick="closeUploadModal()"
+            class="back-button"
+          >
+            Cancel
+          </button>
+        </form>
+      </div>
     </div>
-    <input type="file" id="fileInput" accept=".xlsx" style="display:none;" onchange="handleFileUpload(event)">
+    <input
+      type="file"
+      id="fileInput"
+      accept=".xlsx"
+      style="display: none"
+      onchange="handleFileUpload(event)"
+    />
     <div id="loadingMessage">Loading data...</div>
-    <div id="dataDisplay" style="margin-top: 20px;"></div>
+    <div id="dataDisplay" style="margin-top: 20px"></div>
     <div class="pagination">
-        <button id="prevPage" onclick="prevPage()" disabled>Previous</button>
-        <span id="pageInfo"></span>
-        <button id="nextPage" onclick="nextPage()">Next</button>
+      <button id="prevPage" onclick="prevPage()" disabled>Previous</button>
+      <span id="pageInfo"></span>
+      <button id="nextPage" onclick="nextPage()">Next</button>
     </div>
     <div id="passwordModal" class="modal">
-        <div class="modal-content">
-            <h2>Enter Password</h2>
-            <form id="loginForm" onsubmit="return checkPassword(event)">
-                <label for="password"></label>
-                <input type="password" id="passwordInput" name="password" class="password-input" required>
-                <span id="validCheck" class="valid-check">✔</span>
-                <span id="message"></span>
-                <br><br>
-                <button type="submit" class="back-button">Enter</button>
-                <button type="button" onclick="closeModal()" class="back-button">Cancel</button>
-            </form>
-        </div>
+      <div class="modal-content">
+        <h2>Enter Password</h2>
+        <form id="loginForm" onsubmit="return checkPassword(event)">
+          <label for="password"></label>
+          <input
+            type="password"
+            id="passwordInput"
+            name="password"
+            class="password-input"
+            required
+          />
+          <span id="validCheck" class="valid-check">✔</span>
+          <span id="message"></span>
+          <br /><br />
+          <button type="submit" class="back-button">Enter</button>
+          <button type="button" onclick="closeModal()" class="back-button">
+            Cancel
+          </button>
+        </form>
+      </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <script>
-        let allData = [];
-        let filteredData = [];
-        let isEditing = false;
-        let currentPage = 1;
-        const recordsPerPage = 30;
+      let allData = [];
+      let filteredData = [];
+      let isEditing = false;
+      let currentPage = 1;
+      const recordsPerPage = 30;
 
-        function fetchData() {
-    fetch('/warehouse-data')
-        .then(response => {
+      function fetchData() {
+        fetch("/warehouse-data")
+          .then((response) => {
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+              throw new Error("Network response was not ok");
             }
             return response.json();
-        })
-        .then(data => {
-            console.log('Fetched data:', data);
-            
+          })
+          .then((data) => {
+            console.log("Fetched data:", data);
+
             if (!Array.isArray(data)) {
-                throw new Error('Expected an array of arrays but got something else');
+              throw new Error(
+                "Expected an array of arrays but got something else"
+              );
             }
 
-            data.forEach(row => {
-                if (!Array.isArray(row)) {
-                    throw new Error('Expected each row to be an array');
-                }
+            data.forEach((row) => {
+              if (!Array.isArray(row)) {
+                throw new Error("Expected each row to be an array");
+              }
             });
 
             allData = data;
             filteredData = data;
             displayData(filteredData);
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-            document.getElementById('loadingMessage').textContent = 'Error loading data';
-        });
-}
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+            document.getElementById("loadingMessage").textContent =
+              "Error loading data";
+          });
+      }
 
-function displayData(data) {
-    const table = document.createElement('table');
-    table.innerHTML = ''; // Чистење на табелата
+      function displayData(data) {
+        const table = document.createElement("table");
+        table.innerHTML = ""; // Чистење на табелата
 
-    if (data.length > 0) {
-        const headerRow = document.createElement('tr');
-        data[0].forEach(header => {
-            const th = document.createElement('th');
+        if (data.length > 0) {
+          const headerRow = document.createElement("tr");
+          data[0].forEach((header) => {
+            const th = document.createElement("th");
             th.textContent = header;
             headerRow.appendChild(th);
-        });
-        table.appendChild(headerRow);
+          });
+          table.appendChild(headerRow);
 
-        data.slice(1).forEach(row => {
-            const tr = document.createElement('tr');
-            row.forEach(cell => {
-                const td = document.createElement('td');
-                td.textContent = cell === undefined ? '' : cell;
-                tr.appendChild(td);
+          data.slice(1).forEach((row) => {
+            const tr = document.createElement("tr");
+            row.forEach((cell) => {
+              const td = document.createElement("td");
+              td.textContent = cell === undefined ? "" : cell;
+              tr.appendChild(td);
             });
             table.appendChild(tr);
-        });
-    } else {
-        const noDataTr = document.createElement('tr');
-        const noDataTd = document.createElement('td');
-        noDataTd.colSpan = '4'; // Adjust based on your number of columns
-        noDataTd.textContent = 'No data available';
-        noDataTr.appendChild(noDataTd);
-        table.appendChild(noDataTr);
-    }
-
-    document.getElementById('dataDisplay').innerHTML = ''; 
-    document.getElementById('dataDisplay').appendChild(table);
-}
-
-
-        function filterData() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            filteredData = allData.filter(row =>
-                row.some(cell =>
-                    cell && cell.toString().toLowerCase().includes(searchTerm)
-                )
-            );
-            currentPage = 1; // Reset to first page after filtering
-            displayData(filteredData);
+          });
+        } else {
+          const noDataTr = document.createElement("tr");
+          const noDataTd = document.createElement("td");
+          noDataTd.colSpan = "4"; // Adjust based on your number of columns
+          noDataTd.textContent = "No data available";
+          noDataTr.appendChild(noDataTd);
+          table.appendChild(noDataTr);
         }
 
-        function prevPage() {
-            if (currentPage > 1) {
-                currentPage--;
-                displayData(filteredData);
-            }
+        document.getElementById("dataDisplay").innerHTML = "";
+        document.getElementById("dataDisplay").appendChild(table);
+      }
+
+      function filterData() {
+        const searchTerm = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        filteredData = allData.filter((row) =>
+          row.some(
+            (cell) => cell && cell.toString().toLowerCase().includes(searchTerm)
+          )
+        );
+        currentPage = 1; // Reset to first page after filtering
+        displayData(filteredData);
+      }
+
+      function prevPage() {
+        if (currentPage > 1) {
+          currentPage--;
+          displayData(filteredData);
         }
+      }
 
-        function nextPage() {
-            const totalPages = Math.ceil(filteredData.length / recordsPerPage);
-            if (currentPage < totalPages) {
-                currentPage++;
-                displayData(filteredData);
-            }
+      function nextPage() {
+        const totalPages = Math.ceil(filteredData.length / recordsPerPage);
+        if (currentPage < totalPages) {
+          currentPage++;
+          displayData(filteredData);
         }
+      }
 
-        // Останатите функции ги оставам исти
+      // Останатите функции ги оставам исти
 
-        window.onload = function() {
-            fetchData();
-            document.getElementById('cancelButton').addEventListener('click', function() {
-                exitEditMode();
-            });
-        };
+      window.onload = function () {
+        fetchData();
+        document
+          .getElementById("cancelButton")
+          .addEventListener("click", function () {
+            exitEditMode();
+          });
+      };
     </script>
-</body>
+  </body>
 </html>
